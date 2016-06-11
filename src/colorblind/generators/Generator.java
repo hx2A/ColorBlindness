@@ -14,6 +14,6 @@ public abstract class Generator {
      * 
      * @param pixels
      */
-    abstract public void generateTransformedFrame(int[] pixels);
+    abstract public void transformPixels(int[] pixels);
 
 }

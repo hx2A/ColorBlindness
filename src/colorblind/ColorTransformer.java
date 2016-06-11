@@ -8,6 +8,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.event.KeyEvent;
 import colorblind.generators.ColorBlindnessSimulator;
+import colorblind.generators.ColorTranformGenerator;
 import colorblind.generators.DaltonizeGenerator;
 import colorblind.generators.Generator;
 import colorblind.generators.RegularRenderer;
@@ -33,6 +34,7 @@ public class ColorTransformer implements PConstants {
 	private Generator generator;
 	private boolean callPostDraw;
 	private int[] cachedPixels;
+	private boolean active;
 
 	public ColorTransformer(PApplet parent) {
 		this.parent = parent;
@@ -48,7 +50,8 @@ public class ColorTransformer implements PConstants {
 
 		avgGeneratorTimeMillis = 1;
 		pixelCount = parent.width * parent.height;
-		this.cachedPixels = null;
+		cachedPixels = null;
+		active = true;
 
 		enableSaveFrame = false;
 		saveNextFrame = false;
@@ -71,7 +74,7 @@ public class ColorTransformer implements PConstants {
 	/*
 	 * User Settings
 	 */
-	public ColorBlindnessSimulator simulateAchromatope() {
+	public ColorTranformGenerator simulateAchromatope() {
 		ColorBlindnessSimulator generator = new ColorBlindnessSimulator(
 				ColorBlindnessSimulator.ACHROMATOPE);
 
@@ -80,7 +83,7 @@ public class ColorTransformer implements PConstants {
 		return generator;
 	}
 
-	public ColorBlindnessSimulator simulateDeuteranope() {
+	public ColorTranformGenerator simulateDeuteranope() {
 		ColorBlindnessSimulator generator = new ColorBlindnessSimulator(
 				ColorBlindnessSimulator.DEUTERANOPE);
 
@@ -89,7 +92,7 @@ public class ColorTransformer implements PConstants {
 		return generator;
 	}
 
-	public ColorBlindnessSimulator simulateProtanope() {
+	public ColorTranformGenerator simulateProtanope() {
 		ColorBlindnessSimulator generator = new ColorBlindnessSimulator(
 				ColorBlindnessSimulator.PROTANOPE);
 
@@ -98,7 +101,7 @@ public class ColorTransformer implements PConstants {
 		return generator;
 	}
 
-	public ColorBlindnessSimulator simulateTritanope() {
+	public ColorTranformGenerator simulateTritanope() {
 		ColorBlindnessSimulator generator = new ColorBlindnessSimulator(
 				ColorBlindnessSimulator.TRITANOPE);
 
@@ -107,7 +110,7 @@ public class ColorTransformer implements PConstants {
 		return generator;
 	}
 
-	public DaltonizeGenerator daltonizeAchromatope() {
+	public ColorTranformGenerator daltonizeAchromatope() {
 		DaltonizeGenerator generator = new DaltonizeGenerator(
 				DaltonizeGenerator.ACHROMATOPE);
 
@@ -116,7 +119,7 @@ public class ColorTransformer implements PConstants {
 		return generator;
 	}
 
-	public DaltonizeGenerator daltonizeDeuteranope() {
+	public ColorTranformGenerator daltonizeDeuteranope() {
 		DaltonizeGenerator generator = new DaltonizeGenerator(
 				DaltonizeGenerator.DEUTERANOPE);
 
@@ -125,7 +128,7 @@ public class ColorTransformer implements PConstants {
 		return generator;
 	}
 
-	public DaltonizeGenerator daltonizeProtanope() {
+	public ColorTranformGenerator daltonizeProtanope() {
 		DaltonizeGenerator generator = new DaltonizeGenerator(
 				DaltonizeGenerator.PROTANOPE);
 
@@ -134,7 +137,7 @@ public class ColorTransformer implements PConstants {
 		return generator;
 	}
 
-	public DaltonizeGenerator daltonizeTritanope() {
+	public ColorTranformGenerator daltonizeTritanope() {
 		DaltonizeGenerator generator = new DaltonizeGenerator(
 				DaltonizeGenerator.TRITANOPE);
 
@@ -159,6 +162,22 @@ public class ColorTransformer implements PConstants {
 
 	public Generator getGenerator() {
 		return generator;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public void activate() {
+		active = true;
+	}
+
+	public void deactivate() {
+		active = false;
 	}
 
 	public void enableSaveFrame(char key, String saveFrameLocation) {
@@ -206,6 +225,9 @@ public class ColorTransformer implements PConstants {
 		if (cachedPixels == null) {
 			cachedPixels = new int[pixelCount];
 		} else {
+			// replace frame with the un-transformed pixels. this prevents an
+			// infinite cycle of re-simulating the same pixel, which leads to
+			// blackness.
 			parent.loadPixels();
 			System.arraycopy(cachedPixels, 0, parent.pixels, 0, pixelCount);
 			parent.updatePixels();
@@ -219,25 +241,26 @@ public class ColorTransformer implements PConstants {
 
 		if (saveNextFrame)
 			parent.saveFrame(saveFrameLocation + "####-" + parentClassName
-					+ "-" + "-pre-transformation.png");
+					+ "-pre-transformation.png");
 
 		// create transformed frame
 		long generateStartTime = System.nanoTime();
 
-		generator.generateTransformedFrame(parent.pixels);
+		if (active)
+			generator.transformPixels(parent.pixels);
 
 		avgGeneratorTimeMillis = 0.9f * avgGeneratorTimeMillis + 0.1f
 				* (System.nanoTime() - generateStartTime) / 1000000f;
 
 		parent.updatePixels();
 
-		if (saveNextFrame)
+		if (saveNextFrame && active)
 			parent.saveFrame(saveFrameLocation + "####-" + parentClassName
 					+ "-post-transformation.png");
 
-		// if (callPostDraw) {
-		// callMethod("postDraw");
-		// }
+		if (callPostDraw) {
+			callMethod("postDraw");
+		}
 
 		if (saveNextFrame) {
 			parent.saveFrame(saveFrameLocation + "####-" + parentClassName

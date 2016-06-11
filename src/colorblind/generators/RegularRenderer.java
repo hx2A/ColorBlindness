@@ -16,7 +16,7 @@ public class RegularRenderer extends Generator {
 
     }
 
-    public void generateTransformedFrame(int[] pixels) {
+    public void transformPixels(int[] pixels) {
         // do nothing
     }
 
