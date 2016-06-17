@@ -5,6 +5,11 @@ import colorblind.generators.util.Vector;
 
 public class ColorUtilities {
 
+    public static final int PROTANOPE = 0;
+    public static final int DEUTERANOPE = 1;
+    public static final int TRITANOPE = 2;
+    public static final int ACHROMATOPE = 3;
+
     /**
      * Simple utility function that is used in a couple of places.
      * 
@@ -113,9 +118,9 @@ public class ColorUtilities {
         int sb = (color & 0x000000FF);
 
         // Remove gamma correction.
-        float pow_r = removeGammaCorrectionStandardRGB(sr);
-        float pow_g = removeGammaCorrectionStandardRGB(sg);
-        float pow_b = removeGammaCorrectionStandardRGB(sb);
+        float pow_r = removeGammaCorrectionStandardRGB(sr / 255f);
+        float pow_g = removeGammaCorrectionStandardRGB(sg / 255f);
+        float pow_b = removeGammaCorrectionStandardRGB(sb / 255f);
 
         Vector c = new Vector(pow_r, pow_g, pow_b);
 
@@ -125,13 +130,55 @@ public class ColorUtilities {
     public static int convertLMS2PColor(Vector lmsColor) {
         Vector rgbColor = convertLMS2RGB(lmsColor);
 
-        int simRed = (int) (255 * applyGammaCorrectionStandardRGB((int) ColorUtilities
+        int simRed = (int) (255 * applyGammaCorrectionStandardRGB(ColorUtilities
                 .clip(rgbColor.v1)));
-        int simGreen = (int) (255 * applyGammaCorrectionStandardRGB((int) ColorUtilities
+        int simGreen = (int) (255 * applyGammaCorrectionStandardRGB(ColorUtilities
                 .clip(rgbColor.v2)));
-        int simBlue = (int) (255 * applyGammaCorrectionStandardRGB((int) ColorUtilities
+        int simBlue = (int) (255 * applyGammaCorrectionStandardRGB(ColorUtilities
                 .clip(rgbColor.v3)));
 
-        return (simRed << 16) | (simGreen << 8) | simBlue;
+        return 0xFF000000 | (simRed << 16) | (simGreen << 8) | simBlue;
+    }
+
+    public static int confusingColor(int colorBlindness, int color, float x) {
+        Vector lms = convertPColor2LMS(color);
+
+        float minL;
+        float maxL;
+
+        switch (colorBlindness) {
+        case PROTANOPE:
+            minL = (0 - lms2rgb.r1c2 * lms.v2 - lms2rgb.r1c3 * lms.v3)
+                    / lms2rgb.r1c1;
+            maxL = (1 - lms2rgb.r1c2 * lms.v2 - lms2rgb.r1c3 * lms.v3)
+                    / lms2rgb.r1c1;
+            lms.v1 = minL + (clip(x) * (maxL - minL));
+
+            return convertLMS2PColor(lms);
+
+        case DEUTERANOPE:
+            minL = 0;
+            maxL = 1;
+            lms.v1 = minL + (clip(x) * (maxL - minL));
+
+            return convertLMS2PColor(lms);
+
+        case TRITANOPE:
+            minL = 0;
+            maxL = 1;
+            lms.v1 = minL + (clip(x) * (maxL - minL));
+
+            return convertLMS2PColor(lms);
+
+        case ACHROMATOPE:
+            minL = 0;
+            maxL = 1;
+            lms.v1 = minL + (clip(x) * (maxL - minL));
+
+            return convertLMS2PColor(lms);
+
+        default:
+            throw new RuntimeException("Unknown Color Deficiency");
+        }
     }
 }
