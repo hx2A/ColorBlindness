@@ -5,11 +5,6 @@ import colorblind.generators.util.Vector;
 
 public class ColorUtilities {
 
-    public static final int PROTANOPE = 0;
-    public static final int DEUTERANOPE = 1;
-    public static final int TRITANOPE = 2;
-    public static final int ACHROMATOPE = 3;
-
     /**
      * Simple utility function that is used in a couple of places.
      * 
@@ -31,15 +26,6 @@ public class ColorUtilities {
     public static float clip(float x, float min, float max) {
         return Math.min(Math.max(x, min), max);
     }
-
-    // original
-    // private static Matrix rgb2lms = new Matrix(0.178860079f, 0.43997117f,
-    // 0.035965767f, 0.0338043137f, 0.275152424f, 0.036206346f,
-    // 0.000310889112f, 0.00191660736f, 0.0152808899f);
-    //
-    // private static Matrix lms2rgb = new Matrix(8.00533289f, -12.8819614f,
-    // 11.6806557f, -0.978222203f, 5.26946627f, -10.1830200f,
-    // -0.0401745554f, -0.398840403f, 66.4807787f);
 
     private static Matrix rgb2lms = new Matrix(0.31399022f, 0.63951294f,
             0.04649755f, 0.15537241f, 0.75789446f, 0.08670142f, 0.01775239f,
@@ -140,45 +126,55 @@ public class ColorUtilities {
         return 0xFF000000 | (simRed << 16) | (simGreen << 8) | simBlue;
     }
 
-    public static int confusingColor(int colorBlindness, int color, float x) {
+    public static int confusingColor(Deficiency colorBlindness, int color,
+            float x) {
         Vector lms = convertPColor2LMS(color);
-
-        float minL;
-        float maxL;
 
         switch (colorBlindness) {
         case PROTANOPE:
-            minL = (0 - lms2rgb.r1c2 * lms.v2 - lms2rgb.r1c3 * lms.v3)
+            float minL = (0 - lms2rgb.r1c2 * lms.v2 - lms2rgb.r1c3 * lms.v3)
                     / lms2rgb.r1c1;
-            maxL = (1 - lms2rgb.r1c2 * lms.v2 - lms2rgb.r1c3 * lms.v3)
+            float maxL = (1 - lms2rgb.r1c2 * lms.v2 - lms2rgb.r1c3 * lms.v3)
                     / lms2rgb.r1c1;
             lms.v1 = minL + (clip(x) * (maxL - minL));
 
             return convertLMS2PColor(lms);
 
         case DEUTERANOPE:
-            minL = 0;
-            maxL = 1;
-            lms.v1 = minL + (clip(x) * (maxL - minL));
+            float minM = (0 - lms2rgb.r2c1 * lms.v1 - lms2rgb.r2c3 * lms.v3)
+                    / lms2rgb.r2c2;
+            float maxM = (1 - lms2rgb.r2c1 * lms.v1 - lms2rgb.r2c3 * lms.v3)
+                    / lms2rgb.r2c2;
+            lms.v2 = minM + (clip(x) * (maxM - minM));
 
             return convertLMS2PColor(lms);
 
         case TRITANOPE:
-            minL = 0;
-            maxL = 1;
-            lms.v1 = minL + (clip(x) * (maxL - minL));
+            float minS = (0 - lms2rgb.r3c1 * lms.v1 - lms2rgb.r3c2 * lms.v2)
+                    / lms2rgb.r3c3;
+            float maxS = (1 - lms2rgb.r3c1 * lms.v1 - lms2rgb.r3c2 * lms.v2)
+                    / lms2rgb.r3c3;
+            lms.v3 = minS + (clip(x) * (maxS - minS));
 
             return convertLMS2PColor(lms);
 
         case ACHROMATOPE:
-            minL = 0;
-            maxL = 1;
-            lms.v1 = minL + (clip(x) * (maxL - minL));
-
-            return convertLMS2PColor(lms);
+            throw new RuntimeException("Not yet implemented.");
 
         default:
             throw new RuntimeException("Unknown Color Deficiency");
         }
+    }
+
+    public static int confusingProtanopeColor(int color, float x) {
+        return confusingColor(Deficiency.PROTANOPE, color, x);
+    }
+
+    public static int confusingDeuteranopeColor(int color, float x) {
+        return confusingColor(Deficiency.DEUTERANOPE, color, x);
+    }
+
+    public static int confusingTritanopeColor(int color, float x) {
+        return confusingColor(Deficiency.TRITANOPE, color, x);
     }
 }

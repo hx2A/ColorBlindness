@@ -1,6 +1,7 @@
 package colorblind.generators;
 
 import colorblind.ColorUtilities;
+import colorblind.Deficiency;
 import colorblind.generators.util.Matrix;
 import colorblind.generators.util.Vector;
 
@@ -20,7 +21,7 @@ import colorblind.generators.util.Vector;
 
 public class DaltonizeGenerator extends ColorTranformGenerator {
 
-    public DaltonizeGenerator(int colorBlindness) {
+    public DaltonizeGenerator(Deficiency colorBlindness) {
         super(colorBlindness);
     }
 

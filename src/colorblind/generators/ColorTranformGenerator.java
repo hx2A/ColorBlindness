@@ -2,6 +2,7 @@ package colorblind.generators;
 
 import processing.core.PImage;
 import colorblind.ColorUtilities;
+import colorblind.Deficiency;
 import colorblind.generators.util.Matrix;
 
 /**
@@ -21,7 +22,7 @@ public abstract class ColorTranformGenerator extends Generator {
     public static final int TRITANOPE = 2;
     public static final int ACHROMATOPE = 3;
 
-    protected int colorBlindness;
+    protected Deficiency colorBlindness;
 
     protected int[] colorMap;
     protected float amount;
@@ -39,7 +40,7 @@ public abstract class ColorTranformGenerator extends Generator {
      * 
      * @param colorBlindness
      */
-    public ColorTranformGenerator(int colorBlindness) {
+    public ColorTranformGenerator(Deficiency colorBlindness) {
         this.colorBlindness = colorBlindness;
         this.amount = 1;
         this.amountComplement = 0;
@@ -244,17 +245,6 @@ public abstract class ColorTranformGenerator extends Generator {
     /*
      * Simulation Matrices
      */
-    // original
-    // protected Matrix protanopeSim = new Matrix(0.0f, 2.02344f, -2.52581f,
-    // 0.0f,
-    // 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-    //
-    // protected Matrix deuteranopeSim = new Matrix(1.0f, 0.0f, 0.0f, 0.494207f,
-    // 0.0f, 1.24827f, 0.0f, 0.0f, 1.0f);
-    //
-    // protected Matrix tritanopeSim = new Matrix(1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-    // 0.0f, -0.395913f, 0.801109f, 0.0f);
-
     protected Matrix protanopeSim = new Matrix(0.0f, 1.05118294f, -0.05116099f,
             0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
