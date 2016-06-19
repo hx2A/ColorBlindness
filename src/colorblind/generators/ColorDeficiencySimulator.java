@@ -66,9 +66,9 @@ public class ColorDeficiencySimulator extends ColorTranformGenerator {
             float linGreen = removeGammaCorrectionLUT[startGreen];
             float linBlue = removeGammaCorrectionLUT[startBlue];
 
-            Vector lms = ColorUtilities.convertRGB2LMS(new Vector(linRed,
+            Vector lms = ColorUtilities.convertLinearRGB2LMS(new Vector(linRed,
                     linGreen, linBlue));
-            Vector simRGB = ColorUtilities.convertLMS2RGB(sim.rightMult(lms));
+            Vector simRGB = ColorUtilities.convertLMS2LinearRGB(sim.rightMult(lms));
 
             // Apply gamma correction using fast lookup table
             int simRed = applyGammaCorrectionLUT[(int) (ColorUtilities

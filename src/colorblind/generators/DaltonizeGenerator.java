@@ -79,8 +79,8 @@ public class DaltonizeGenerator extends ColorTranformGenerator {
             float linBlue = removeGammaCorrectionLUT[startBlue];
 
             Vector linRGB = new Vector(linRed, linGreen, linBlue);
-            Vector lms = ColorUtilities.convertRGB2LMS(linRGB);
-            Vector simRGB = ColorUtilities.convertLMS2RGB(sim.rightMult(lms));
+            Vector lms = ColorUtilities.convertLinearRGB2LMS(linRGB);
+            Vector simRGB = ColorUtilities.convertLMS2LinearRGB(sim.rightMult(lms));
             Vector error = linRGB.sub(simRGB);
             Vector correction = shiftTowardsVisible.rightMult(error);
             Vector daltonized = correction.add(linRGB);
