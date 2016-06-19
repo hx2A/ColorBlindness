@@ -30,14 +30,14 @@ public class ColorUtilities {
     /*
      * Simulation Matrices
      */
-    public static Matrix protanopeSim = new Matrix(0.0f, 1.05118294f, -0.05116099f,
-            0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+    public static Matrix protanopeSim = new Matrix(0.0f, 1.05118294f,
+            -0.05116099f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
-    public static Matrix deuteranopeSim = new Matrix(1.0f, 0.0f, 0.0f, 0.9513092f,
-            0.0f, 0.04866992f, 0.0f, 0.0f, 1.0f);
+    public static Matrix deuteranopeSim = new Matrix(1.0f, 0.0f, 0.0f,
+            0.9513092f, 0.0f, 0.04866992f, 0.0f, 0.0f, 1.0f);
 
-    public static Matrix tritanopeSim = new Matrix(1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-            0.0f, -19.54614229f, 20.5465713f, 0.0f);
+    public static Matrix tritanopeSim = new Matrix(1.0f, 0.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, -19.54614229f, 20.5465713f, 0.0f);
 
     public static Vector achromatopeSim = new Vector(0.212656f, 0.715158f,
             0.072186f);
@@ -45,8 +45,8 @@ public class ColorUtilities {
     /*
      * Daltonize Matrices
      */
-    public static Matrix shiftTowardsVisible = new Matrix(0.0f, 0.0f, 0.0f, 0.7f,
-            1.0f, 0.0f, 0.7f, 0.0f, 1.0f);
+    public static Matrix shiftTowardsVisible = new Matrix(0.0f, 0.0f, 0.0f,
+            0.7f, 1.0f, 0.0f, 0.7f, 0.0f, 1.0f);
 
     private static Matrix rgb2lms = new Matrix(0.31399022f, 0.63951294f,
             0.04649755f, 0.15537241f, 0.75789446f, 0.08670142f, 0.01775239f,
@@ -272,12 +272,19 @@ public class ColorUtilities {
         float Z = rgb.dot(achromatopeSim);
         Vector rgb2 = new Vector();
 
-        rgb2.v1 = clip(x1);
+        float minR2 = 0;
+        float maxR2 = Math.min(1, Z / achromatopeSim.v1);
+        rgb2.v1 = minR2 + clip(x1) * (maxR2 - minR2);
 
-        float minG2 = (Z - 0.212656f * rgb2.v1 - 0.072186f * 1) / 0.715158f;
-        float maxG2 = (Z - 0.212656f * rgb2.v1) / 0.715158f;
+        float minG2 = Math.max(0,
+                (Z - achromatopeSim.v1 * rgb2.v1 - achromatopeSim.v3 * 1)
+                        / achromatopeSim.v2);
+        float maxG2 = Math.min(1, (Z - achromatopeSim.v1 * rgb2.v1)
+                / achromatopeSim.v2);
         rgb2.v2 = minG2 + clip(x2) * (maxG2 - minG2);
-        rgb2.v3 = (Z - 0.212656f * rgb2.v1 - 0.072186f * rgb2.v2) / 0.072186f;
+        rgb2.v3 = (Z - achromatopeSim.v1 * rgb2.v1 - achromatopeSim.v2
+                * rgb2.v2)
+                / achromatopeSim.v3;
 
         return convertLinearRGB2PColor(rgb2);
     }
