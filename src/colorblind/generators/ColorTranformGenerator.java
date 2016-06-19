@@ -59,11 +59,14 @@ public abstract class ColorTranformGenerator extends Generator {
         case ACHROMATOPE:
             return precalcAchromatopeColorMap(amount);
         case PROTANOPE:
-            return precalcDichromaticColorMap(protanopeSim, amount);
+            return precalcDichromaticColorMap(ColorUtilities.protanopeSim,
+                    amount);
         case DEUTERANOPE:
-            return precalcDichromaticColorMap(deuteranopeSim, amount);
+            return precalcDichromaticColorMap(ColorUtilities.deuteranopeSim,
+                    amount);
         case TRITANOPE:
-            return precalcDichromaticColorMap(tritanopeSim, amount);
+            return precalcDichromaticColorMap(ColorUtilities.tritanopeSim,
+                    amount);
         default:
             throw new RuntimeException("ERROR: Unknown color deficiency");
         }
@@ -241,22 +244,4 @@ public abstract class ColorTranformGenerator extends Generator {
 
         return removeGammaCorrectionLUT;
     }
-
-    /*
-     * Simulation Matrices
-     */
-    protected Matrix protanopeSim = new Matrix(0.0f, 1.05118294f, -0.05116099f,
-            0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-
-    protected Matrix deuteranopeSim = new Matrix(1.0f, 0.0f, 0.0f, 0.9513092f,
-            0.0f, 0.04866992f, 0.0f, 0.0f, 1.0f);
-
-    protected Matrix tritanopeSim = new Matrix(1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-            0.0f, -19.54614229f, 20.5465713f, 0.0f);
-
-    /*
-     * Daltonize Matrices
-     */
-    protected Matrix shiftTowardsVisible = new Matrix(0.0f, 0.0f, 0.0f, 0.7f,
-            1.0f, 0.0f, 0.7f, 0.0f, 1.0f);
 }

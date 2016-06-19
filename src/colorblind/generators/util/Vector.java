@@ -27,4 +27,13 @@ public class Vector {
 
         return out;
     }
+
+    public float dot(Vector that) {
+        return v1 * that.v1 + v2 * that.v2 + v3 * that.v3;
+    }
+
+    @Override
+    public String toString() {
+        return "Vector(" + v1 + ", " + v2 + ", " + v3 + ")";
+    }
 }

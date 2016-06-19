@@ -38,11 +38,14 @@ public class DaltonizeGenerator extends ColorTranformGenerator {
             float linBlue = removeGammaCorrectionLUT[startBlue];
 
             Vector linRGB = new Vector(linRed, linGreen, linBlue);
-            float simGray = linRed * 0.212656f + linGreen * 0.715158f + linBlue
-                    * 0.072186f;
+            float simGray = ColorUtilities.clip((float) (linRed
+                    * ColorUtilities.achromatopeSim.v1 + linGreen
+                    * ColorUtilities.achromatopeSim.v2 + linBlue
+                    * ColorUtilities.achromatopeSim.v3));
             Vector simRGB = new Vector(simGray, simGray, simGray);
             Vector error = linRGB.sub(simRGB);
-            Vector correction = shiftTowardsVisible.rightMult(error);
+            Vector correction = ColorUtilities.shiftTowardsVisible
+                    .rightMult(error);
             Vector daltonized = correction.add(linRGB);
 
             // Apply gamma correction using fast lookup table
@@ -80,9 +83,11 @@ public class DaltonizeGenerator extends ColorTranformGenerator {
 
             Vector linRGB = new Vector(linRed, linGreen, linBlue);
             Vector lms = ColorUtilities.convertLinearRGB2LMS(linRGB);
-            Vector simRGB = ColorUtilities.convertLMS2LinearRGB(sim.rightMult(lms));
+            Vector simRGB = ColorUtilities.convertLMS2LinearRGB(sim
+                    .rightMult(lms));
             Vector error = linRGB.sub(simRGB);
-            Vector correction = shiftTowardsVisible.rightMult(error);
+            Vector correction = ColorUtilities.shiftTowardsVisible
+                    .rightMult(error);
             Vector daltonized = correction.add(linRGB);
 
             // Apply gamma correction using fast lookup table
