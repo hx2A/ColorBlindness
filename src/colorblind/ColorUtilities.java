@@ -206,7 +206,7 @@ public class ColorUtilities {
             float maxM = Float.MAX_VALUE;
 
             for (float boundary : boundaries) {
-                if (boundary < lms.v1)
+                if (boundary < lms.v2)
                     minM = Math.max(minM, boundary);
                 else
                     maxM = Math.min(maxM, boundary);
@@ -235,7 +235,7 @@ public class ColorUtilities {
             float maxS = Float.MAX_VALUE;
 
             for (float boundary : boundaries) {
-                if (boundary < lms.v1)
+                if (boundary < lms.v3)
                     minS = Math.max(minS, boundary);
                 else
                     maxS = Math.min(maxS, boundary);
