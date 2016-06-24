@@ -23,9 +23,9 @@ int button3Y1;
 int button3X2;
 int button3Y2;
 
-int colorOff;
-int colorHover;
-int colorHover2;
+color colorOff;
+color colorHover;
+color colorHover2;
 
 void setup() {
   size(300, 500);
