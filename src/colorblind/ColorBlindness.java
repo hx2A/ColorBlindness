@@ -75,105 +75,53 @@ public class ColorBlindness implements PConstants {
      * User Settings
      */
     public ColorTranformGenerator simulate(Deficiency colorBlindness) {
-        switch (colorBlindness) {
-        case PROTANOPE:
-            return simulateProtanope();
-        case DEUTERANOPE:
-            return simulateDeuteranope();
-        case TRITANOPE:
-            return simulateTritanope();
-        case ACHROMATOPE:
-            return simulateAchromatope();
-        default:
-            throw new RuntimeException("Unknown color blindness deficiency");
-        }
+        ColorTranformGenerator generator = ColorDeficiencySimulator
+                .createSimulator(colorBlindness);
+
+        setGenerator(generator);
+
+        return generator;
     }
 
     public ColorTranformGenerator simulateAchromatope() {
-        ColorDeficiencySimulator generator = new ColorDeficiencySimulator(
-                Deficiency.ACHROMATOPE);
-
-        setGenerator(generator);
-
-        return generator;
+        return simulate(Deficiency.ACHROMATOPE);
     }
 
     public ColorTranformGenerator simulateDeuteranope() {
-        ColorDeficiencySimulator generator = new ColorDeficiencySimulator(
-                Deficiency.DEUTERANOPE);
-
-        setGenerator(generator);
-
-        return generator;
+        return simulate(Deficiency.DEUTERANOPE);
     }
 
     public ColorTranformGenerator simulateProtanope() {
-        ColorDeficiencySimulator generator = new ColorDeficiencySimulator(
-                Deficiency.PROTANOPE);
-
-        setGenerator(generator);
-
-        return generator;
+        return simulate(Deficiency.PROTANOPE);
     }
 
     public ColorTranformGenerator simulateTritanope() {
-        ColorDeficiencySimulator generator = new ColorDeficiencySimulator(
-                Deficiency.TRITANOPE);
-
-        setGenerator(generator);
-
-        return generator;
+        return simulate(Deficiency.TRITANOPE);
     }
 
     public ColorTranformGenerator daltonize(Deficiency colorBlindness) {
-        switch (colorBlindness) {
-        case PROTANOPE:
-            return daltonizeProtanope();
-        case DEUTERANOPE:
-            return daltonizeDeuteranope();
-        case TRITANOPE:
-            return daltonizeTritanope();
-        case ACHROMATOPE:
-            return daltonizeAchromatope();
-        default:
-            throw new RuntimeException("Unknown color blindness deficiency");
-        }
+        ColorTranformGenerator generator = DaltonizeGenerator
+                .createDaltonizer(colorBlindness);
+
+        setGenerator(generator);
+
+        return generator;
     }
 
     public ColorTranformGenerator daltonizeAchromatope() {
-        DaltonizeGenerator generator = new DaltonizeGenerator(
-                Deficiency.ACHROMATOPE);
-
-        setGenerator(generator);
-
-        return generator;
+        return daltonize(Deficiency.ACHROMATOPE);
     }
 
     public ColorTranformGenerator daltonizeDeuteranope() {
-        DaltonizeGenerator generator = new DaltonizeGenerator(
-                Deficiency.DEUTERANOPE);
-
-        setGenerator(generator);
-
-        return generator;
+        return daltonize(Deficiency.DEUTERANOPE);
     }
 
     public ColorTranformGenerator daltonizeProtanope() {
-        DaltonizeGenerator generator = new DaltonizeGenerator(
-                Deficiency.PROTANOPE);
-
-        setGenerator(generator);
-
-        return generator;
+        return daltonize(Deficiency.PROTANOPE);
     }
 
     public ColorTranformGenerator daltonizeTritanope() {
-        DaltonizeGenerator generator = new DaltonizeGenerator(
-                Deficiency.TRITANOPE);
-
-        setGenerator(generator);
-
-        return generator;
+        return daltonize(Deficiency.TRITANOPE);
     }
 
     public RegularRenderer renderRegular() {

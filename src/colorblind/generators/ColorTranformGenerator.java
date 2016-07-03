@@ -17,12 +17,7 @@ import colorblind.generators.util.Matrix;
  */
 public abstract class ColorTranformGenerator extends Generator {
 
-    public static final int PROTANOPE = 0;
-    public static final int DEUTERANOPE = 1;
-    public static final int TRITANOPE = 2;
-    public static final int ACHROMATOPE = 3;
-
-    protected Deficiency colorBlindness;
+    protected Deficiency deficiency;
 
     protected int[] colorMap;
     protected float amount;
@@ -41,7 +36,7 @@ public abstract class ColorTranformGenerator extends Generator {
      * @param colorBlindness
      */
     public ColorTranformGenerator(Deficiency colorBlindness) {
-        this.colorBlindness = colorBlindness;
+        this.deficiency = colorBlindness;
         this.amount = 1;
         this.amountComplement = 0;
         this.dynamicAmount = false;
@@ -55,7 +50,7 @@ public abstract class ColorTranformGenerator extends Generator {
     protected abstract int[] precalcDichromaticColorMap(Matrix sim, float amount);
 
     private int[] computeColorMapLookup(float amount) {
-        switch (colorBlindness) {
+        switch (deficiency) {
         case ACHROMATOPE:
             return precalcAchromatopeColorMap(amount);
         case PROTANOPE:
@@ -154,7 +149,6 @@ public abstract class ColorTranformGenerator extends Generator {
         if (dynamicAmount) {
             if (amount == 0) {
                 // do nothing. return pixels unchanged.
-                return;
             } else if (amount == 1) {
                 // since we know colorMap was calculated with amount == 1, we
                 // can just do the lookup.
@@ -197,6 +191,7 @@ public abstract class ColorTranformGenerator extends Generator {
         copy.loadPixels();
         transformPixels(copy.pixels);
         copy.updatePixels();
+
         return copy;
     }
 

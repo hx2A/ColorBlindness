@@ -25,6 +25,21 @@ public class ColorDeficiencySimulator extends ColorTranformGenerator {
         super(colorBlindness);
     }
 
+    public static ColorDeficiencySimulator createSimulator(Deficiency colorBlindness) {
+        switch (colorBlindness) {
+        case PROTANOPE:
+            return new ColorDeficiencySimulator(Deficiency.PROTANOPE);
+        case DEUTERANOPE:
+            return new ColorDeficiencySimulator(Deficiency.DEUTERANOPE);
+        case TRITANOPE:
+            return new ColorDeficiencySimulator(Deficiency.TRITANOPE);
+        case ACHROMATOPE:
+            return new ColorDeficiencySimulator(Deficiency.ACHROMATOPE);
+        default:
+            throw new RuntimeException("Unknown color blindness deficiency");
+        }
+    }
+
     protected int[] precalcAchromatopeColorMap(float amount) {
         int[] colorMap = new int[256 * 256 * 256];
         for (int color = 0; color < colorMap.length; ++color) {

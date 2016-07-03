@@ -25,6 +25,21 @@ public class DaltonizeGenerator extends ColorTranformGenerator {
         super(colorBlindness);
     }
 
+    public static DaltonizeGenerator createDaltonizer(Deficiency colorBlindness) {
+        switch (colorBlindness) {
+        case PROTANOPE:
+            return new DaltonizeGenerator(Deficiency.PROTANOPE);
+        case DEUTERANOPE:
+            return new DaltonizeGenerator(Deficiency.DEUTERANOPE);
+        case TRITANOPE:
+            return new DaltonizeGenerator(Deficiency.TRITANOPE);
+        case ACHROMATOPE:
+            return new DaltonizeGenerator(Deficiency.ACHROMATOPE);
+        default:
+            throw new RuntimeException("Unknown color blindness deficiency");
+        }
+    }
+
     protected int[] precalcAchromatopeColorMap(float amount) {
         int[] colorMap = new int[256 * 256 * 256];
         for (int color = 0; color < colorMap.length; ++color) {
