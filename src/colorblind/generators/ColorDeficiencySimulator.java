@@ -38,9 +38,9 @@ public class ColorDeficiencySimulator extends ColorTranformGenerator {
             float linBlue = removeGammaCorrectionLUT[startBlue];
 
             int simRed = applyGammaCorrectionLUT[(int) (ColorUtilities
-                    .clip((float) (linRed * ColorUtilities.achromatopeSim.v1
-                            + linGreen * ColorUtilities.achromatopeSim.v2 + linBlue
-                            * ColorUtilities.achromatopeSim.v3)) * (MAX_ENCODED_VALUE - 1))];
+                    .clip(linRed * ColorUtilities.achromatopeSim.v1 + linGreen
+                            * ColorUtilities.achromatopeSim.v2 + linBlue
+                            * ColorUtilities.achromatopeSim.v3) * (MAX_ENCODED_VALUE - 1))];
             int simGreen = simRed;
             int simBlue = simRed;
 
