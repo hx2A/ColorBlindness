@@ -48,11 +48,11 @@ public class ColorUtilities {
     public static Matrix shiftTowardsVisible = new Matrix(0.0f, 0.0f, 0.0f,
             0.7f, 1.0f, 0.0f, 0.7f, 0.0f, 1.0f);
 
-    private static Matrix rgb2lms = new Matrix(0.31399022f, 0.63951294f,
+    public static Matrix rgb2lms = new Matrix(0.31399022f, 0.63951294f,
             0.04649755f, 0.15537241f, 0.75789446f, 0.08670142f, 0.01775239f,
             0.10944209f, 0.87256922f);
 
-    private static Matrix lms2rgb = new Matrix(5.47221206f, -4.6419601f,
+    public static Matrix lms2rgb = new Matrix(5.47221206f, -4.6419601f,
             0.16963708f, -1.1252419f, 2.29317094f, -0.1678952f, 0.02980165f,
             -0.19318073f, 1.16364789f);
 
