@@ -80,7 +80,7 @@ public abstract class ColorTranformGenerator extends Generator {
         if (dynamicAmount == false && colorMap != null) {
             System.err
                     .println("Please don't change amount without also calling setDynamicAmount()."
-                            + "Call it in your setup() function or before calling setAmount().");
+                            + " Call it in your setup() function or before calling setAmount().");
             colorMap = null;
         }
 
