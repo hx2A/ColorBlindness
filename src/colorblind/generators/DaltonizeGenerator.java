@@ -52,12 +52,16 @@ public class DaltonizeGenerator extends ColorTranformGenerator {
             float linGreen = removeGammaCorrectionLUT[startGreen];
             float linBlue = removeGammaCorrectionLUT[startBlue];
 
+            // simulate colorblindness
             Vector linRGB = new Vector(linRed, linGreen, linBlue);
             float simGray = ColorUtilities.clip(linRed
                     * ColorUtilities.achromatopeSim.v1 + linGreen
                     * ColorUtilities.achromatopeSim.v2 + linBlue
                     * ColorUtilities.achromatopeSim.v3);
             Vector simRGB = new Vector(simGray, simGray, simGray);
+
+            // calculate the color delta in color space, rotate it, and
+            // add it back to the simulated color.
             Vector error = linRGB.sub(simRGB);
             Vector correction = ColorUtilities.shiftTowardsVisible
                     .rightMult(error);
@@ -97,10 +101,14 @@ public class DaltonizeGenerator extends ColorTranformGenerator {
             float linGreen = removeGammaCorrectionLUT[startGreen];
             float linBlue = removeGammaCorrectionLUT[startBlue];
 
+            // simulate colorblindness
             Vector linRGB = new Vector(linRed, linGreen, linBlue);
             Vector lms = ColorUtilities.convertLinearRGB2LMS(linRGB);
             Vector simRGB = ColorUtilities.convertLMS2LinearRGB(sim
                     .rightMult(lms));
+
+            // calculate the color delta in color space, rotate it, and
+            // add it back to the simulated color.
             Vector error = linRGB.sub(simRGB);
             Vector correction = ColorUtilities.shiftTowardsVisible
                     .rightMult(error);

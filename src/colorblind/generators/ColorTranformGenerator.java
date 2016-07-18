@@ -19,6 +19,7 @@ public abstract class ColorTranformGenerator extends Generator {
 
     protected Deficiency deficiency;
 
+    // colorMap is typically calculated once when it is first needed.
     protected int[] colorMap;
     protected float amount;
     protected float amountComplement;
@@ -49,6 +50,14 @@ public abstract class ColorTranformGenerator extends Generator {
 
     protected abstract int[] precalcDichromaticColorMap(Matrix sim, float amount);
 
+    /**
+     * This should only be called once, and lazily, when the table is first
+     * used.
+     * 
+     * @param amount
+     *            number in range [0, 1]
+     * @return precomputed lookup table.
+     */
     private int[] computeColorMapLookup(float amount) {
         switch (deficiency) {
         case ACHROMATOPE:
@@ -97,6 +106,8 @@ public abstract class ColorTranformGenerator extends Generator {
      * @return
      */
     public ColorTranformGenerator setDynamicAmount() {
+        // only null out the colorMap if it had been calculated with an
+        // amount less than 1.
         if (dynamicAmount == false && colorMap != null && amount < 1)
             colorMap = null;
 
@@ -105,6 +116,14 @@ public abstract class ColorTranformGenerator extends Generator {
         return this;
     }
 
+    /**
+     * Transform an individual color using the colorMap.
+     * 
+     * Note it is not so efficient to call this for many colors per frame.
+     * 
+     * @param color
+     * @return transformed color using colorMap.
+     */
     public int transformColor(int color) {
         if (dynamicAmount) {
             if (amount == 0) {
@@ -133,6 +152,14 @@ public abstract class ColorTranformGenerator extends Generator {
         }
     }
 
+    /**
+     * Called by ColorBlindness routine to transform every pixel on the canvas.
+     * 
+     * Alters pixels in place.
+     * 
+     * @param pixels
+     *            Processing pixel array.
+     */
     public void transformPixels(int[] pixels) {
         if (colorMap == null) {
             System.out.println("Pre-computing lookup table...");
@@ -158,6 +185,7 @@ public abstract class ColorTranformGenerator extends Generator {
             } else { // 0 < amount < 1
                 for (int i = 0; i < pixels.length; ++i) {
                     // inline transformColor for better performance
+                    // repeated function calls would be too slow.
                     // pixels[i] = transformColor(pixels[i]);
 
                     int color = pixels[i];
@@ -185,6 +213,13 @@ public abstract class ColorTranformGenerator extends Generator {
         }
     }
 
+    /**
+     * Copy an arbitrary PImage object and transform it using the colorMap.
+     * 
+     * @param img
+     *            Processing PImage to be altered.
+     * @return
+     */
     public PImage transformPImage(PImage img) {
         // use get so this works in P2 and P3
         PImage copy = img.get(0, 0, img.width, img.height);
@@ -196,7 +231,7 @@ public abstract class ColorTranformGenerator extends Generator {
     }
 
     /*
-     * Functions for pre-calculating look-up-tables
+     * Functions for pre-calculating gamma look-up-tables
      */
     private int[] preComputeApplyGammaCorrectionStandardrgbLUT(
             int maxEncodedValue) {

@@ -9,7 +9,7 @@ public class ColorUtilities {
      * Simple utility function that is used in a couple of places.
      * 
      * @param x
-     * @return
+     * @return x constrained to [0, 1]
      */
     public static float clip(float x) {
         return Math.min(Math.max(x, 0), 1);
@@ -21,7 +21,7 @@ public class ColorUtilities {
      * @param x
      * @param min
      * @param max
-     * @return
+     * @return x constrained to [min, max]
      */
     public static float clip(float x, float min, float max) {
         return Math.min(Math.max(x, min), max);
@@ -29,6 +29,8 @@ public class ColorUtilities {
 
     /*
      * Simulation Matrices
+     * 
+     * public so the user can change them if desired.
      */
     public static Matrix protanopeSim = new Matrix(0.0f, 1.05118294f,
             -0.05116099f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
@@ -44,6 +46,8 @@ public class ColorUtilities {
 
     /*
      * Daltonize Matrices
+     * 
+     * public so the user can change them if desired.
      */
     public static Matrix shiftTowardsVisible = new Matrix(0.0f, 0.0f, 0.0f,
             0.7f, 1.0f, 0.0f, 0.7f, 0.0f, 1.0f);
@@ -109,7 +113,7 @@ public class ColorUtilities {
     }
 
     /*
-     * LMS <--> RGB conversion functions
+     * Processing color <--> LMS <--> linear RGB conversion functions
      */
     public static Vector convertLinearRGB2LMS(Vector rgbColor) {
         return rgb2lms.rightMult(rgbColor);
@@ -151,6 +155,14 @@ public class ColorUtilities {
         return convertLinearRGB2PColor(convertLMS2LinearRGB(lmsColor));
     }
 
+    /*
+     * Intentionally generate colors that would be confusing to a colorblind
+     * person.
+     * 
+     * If a plot of all possible colors were a 3D space, there would be lines
+     * of colors in the 3D space that would look identical to a colorblind
+     * person. This code attempts to pick multiple colors along those lines.
+     */
     public static int confusingColor(Deficiency colorBlindness, int color,
             float x) {
         Vector lms = convertPColor2LMS(color);
