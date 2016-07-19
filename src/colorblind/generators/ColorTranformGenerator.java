@@ -117,19 +117,43 @@ public abstract class ColorTranformGenerator extends Generator {
     }
 
     /**
+     * Check to see if the lookup table exists. If not, call the function to
+     * compute it.
+     */
+    private void verifyLookupTables() {
+        if (colorMap == null) {
+            System.out.println("Pre-computing lookup table...");
+            // Important: if dynamicAmount is true, then compute colorMap with
+            // amount 1 and do an interpolation later. If dynamicAmount is
+            // false, calculate colorMap with the fixed amount.
+            if (dynamicAmount) {
+                colorMap = computeColorMapLookup(1);
+            } else {
+                colorMap = computeColorMapLookup(amount);
+            }
+        }
+    }
+
+    /**
      * Transform an individual color using the colorMap.
      * 
-     * Note it is not so efficient to call this for many colors per frame.
+     * Preserves the input color's transparency or alpha channel.
+     * 
+     * Note it is not so efficient to call this for thousands of colors per
+     * frame.
      * 
      * @param color
      * @return transformed color using colorMap.
      */
     public int transformColor(int color) {
+        verifyLookupTables();
+
         if (dynamicAmount) {
             if (amount == 0) {
                 return color;
             } else if (amount == 1) {
-                return colorMap[color & 0x00FFFFFF];
+                return (color & 0xFF000000)
+                        | (colorMap[color & 0x00FFFFFF] & 0x00FFFFFF);
             } else { // 0 < amount < 1
                 int map = colorMap[color & 0x00FFFFFF];
 
@@ -145,33 +169,29 @@ public abstract class ColorTranformGenerator extends Generator {
                 int fg = (int) (g * amountComplement + g2 * amount);
                 int fb = (int) (b * amountComplement + b2 * amount);
 
-                return (fr << 16) | (fg << 8) | fb;
+                return (color & 0xFF000000) | (fr << 16) | (fg << 8) | fb;
             }
         } else {
-            return colorMap[color & 0x00FFFFFF];
+            return (color & 0xFF000000)
+                    | (colorMap[color & 0x00FFFFFF] & 0x00FFFFFF);
         }
     }
 
     /**
-     * Called by ColorBlindness routine to transform every pixel on the canvas.
+     * Called by ColorBlindness routine to transform every pixel in the pixel
+     * array.
      * 
      * Alters pixels in place.
+     * 
+     * This does not support transparency. The transformed colors will have 0xFF
+     * as the alpha channel, regardless of what the value was in the original
+     * color.
      * 
      * @param pixels
      *            Processing pixel array.
      */
     public void transformPixels(int[] pixels) {
-        if (colorMap == null) {
-            System.out.println("Pre-computing lookup table...");
-            // Important: if dynamicAmount is true, then compute colorMap with
-            // amount 1 and do an interpolation later. If dynamicAmount is
-            // false, calculate colorMap with the fixed amount.
-            if (dynamicAmount) {
-                colorMap = computeColorMapLookup(1);
-            } else {
-                colorMap = computeColorMapLookup(amount);
-            }
-        }
+        verifyLookupTables();
 
         if (dynamicAmount) {
             if (amount == 0) {
@@ -203,7 +223,7 @@ public abstract class ColorTranformGenerator extends Generator {
                     int fg = (int) (g * amountComplement + g2 * amount);
                     int fb = (int) (b * amountComplement + b2 * amount);
 
-                    pixels[i] = (fr << 16) | (fg << 8) | fb;
+                    pixels[i] = 0xFF000000 | (fr << 16) | (fg << 8) | fb;
                 }
             }
         } else {
@@ -215,16 +235,68 @@ public abstract class ColorTranformGenerator extends Generator {
 
     /**
      * Copy an arbitrary PImage object and transform it using the colorMap.
+     * Original image is unaltered.
+     * 
+     * Unlike transformPixels, this supports transparency. The transformed
+     * colors will have the same alpha channel as the original image.
+     * 
+     * Maintaining the alpha channel makes this noticeably slower, but that's OK
+     * because this should be called only once for an image, not once per frame.
+     * If you want faster performance and don't care about the alpha channel,
+     * use transformPixels(img.pixels) instead.
      * 
      * @param img
      *            Processing PImage to be altered.
      * @return
      */
     public PImage transformPImage(PImage img) {
+        verifyLookupTables();
+
         // use get so this works in P2 and P3
         PImage copy = img.get(0, 0, img.width, img.height);
         copy.loadPixels();
-        transformPixels(copy.pixels);
+
+        if (dynamicAmount) {
+            if (amount == 0) {
+                // do nothing. return pixels unchanged.
+            } else if (amount == 1) {
+                // since we know colorMap was calculated with amount == 1, we
+                // can just do the lookup.
+                for (int i = 0; i < copy.pixels.length; ++i) {
+                    copy.pixels[i] = (copy.pixels[i] & 0xFF000000)
+                            | (colorMap[copy.pixels[i] & 0x00FFFFFF] & 0x00FFFFFF);
+                }
+            } else { // 0 < amount < 1
+                for (int i = 0; i < copy.pixels.length; ++i) {
+                    // inline transformColor for better performance
+                    // repeated function calls would be too slow.
+                    // pixels[i] = transformColor(pixels[i]);
+
+                    int color = copy.pixels[i];
+                    int map = colorMap[color & 0x00FFFFFF];
+
+                    int r = (color & 0x00FF0000) >> 16;
+                    int g = (color & 0x0000FF00) >> 8;
+                    int b = (color & 0x000000FF);
+
+                    int r2 = (map & 0x00FF0000) >> 16;
+                    int g2 = (map & 0x0000FF00) >> 8;
+                    int b2 = (map & 0x000000FF);
+
+                    int fr = (int) (r * amountComplement + r2 * amount);
+                    int fg = (int) (g * amountComplement + g2 * amount);
+                    int fb = (int) (b * amountComplement + b2 * amount);
+
+                    copy.pixels[i] = (color & 0xFF000000) | (fr << 16)
+                            | (fg << 8) | fb;
+                }
+            }
+        } else {
+            for (int i = 0; i < copy.pixels.length; ++i) {
+                copy.pixels[i] = (copy.pixels[i] & 0xFF000000)
+                        | (colorMap[copy.pixels[i] & 0x00FFFFFF] & 0x00FFFFFF);
+            }
+        }
         copy.updatePixels();
 
         return copy;
