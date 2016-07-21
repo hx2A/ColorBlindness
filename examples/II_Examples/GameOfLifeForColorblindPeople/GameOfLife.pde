@@ -1,4 +1,4 @@
-public class GameOfLife {
+class GameOfLife {
 
   private boolean[] state;
   public int rows;

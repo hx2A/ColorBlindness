@@ -16,32 +16,32 @@ private enum Action {
   SIMULATE, DALTONIZE, DALTONIZE_AND_SIMULATE
 }
 
-private ControlP5 cp5;
-private ColorBlindness colorBlindness;
-private ColorTranformGenerator currentSimulator;
-private ColorTranformGenerator currentDaltonizer;
+ControlP5 cp5;
+ColorBlindness colorBlindness;
+ColorTranformGenerator currentSimulator;
+ColorTranformGenerator currentDaltonizer;
 
 // ControlP5 variables
-private boolean ready;
-private Action action;
-private Deficiency deficiency;
-private int amount;
-private File outputFile;
-private boolean wroteOutput;
-private String status;
+boolean ready;
+Action action;
+Deficiency deficiency;
+int amount;
+File outputFile;
+boolean wroteOutput;
+String status;
 
-private String actionNames = "Simulate, Daltonize, Daltonize and Simulate";
-private String deficiencyNames = "Protanope, Deuteranope, Tritanope, Achromatope";
+String actionNames = "Simulate, Daltonize, Daltonize and Simulate";
+String deficiencyNames = "Protanope, Deuteranope, Tritanope, Achromatope";
 
-private Map<Integer, String> actionNameMap;
-private Map<Integer, String> deficiencyNameMap;
+Map<Integer, String> actionNameMap;
+Map<Integer, String> deficiencyNameMap;
 
-private final int MAX_IMAGE_HEIGHT = 250;
-private final int MAX_IMAGE_WIDTH = 250;
-private PImage inputImage;
-private PImage scaledInputImage;
-private PImage outputImage;
-private PImage scaledOutputImage;
+final int MAX_IMAGE_HEIGHT = 250;
+final int MAX_IMAGE_WIDTH = 250;
+PImage inputImage;
+PImage scaledInputImage;
+PImage outputImage;
+PImage scaledOutputImage;
 
 void setup() {
   size(720, 270);
@@ -257,7 +257,7 @@ Slider addSlider(String variable, String caption, float y, int min, int max) {
   return slider;
 }
 
-private void createControls() {
+void createControls() {
   float yOffset = 0.5f;
   int controlSpace = 30;
 
@@ -278,7 +278,7 @@ private void createControls() {
   actionDropdown.bringToFront().close();
 }
 
-private void setCurrentGenerators() {
+void setCurrentGenerators() {
   if (deficiency == null) {
     return;
   } else {

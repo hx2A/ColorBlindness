@@ -1,4 +1,4 @@
-private class ActionListener implements ControlListener {
+class ActionListener implements ControlListener {
   public void controlEvent(ControlEvent theEvent) {
     String newActionName = actionNameMap.get((int) theEvent.getValue());
 

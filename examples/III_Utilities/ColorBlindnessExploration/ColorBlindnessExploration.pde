@@ -11,7 +11,7 @@ import colorblind.ColorBlindness;
 import colorblind.Deficiency;
 import colorblind.generators.ColorTranformGenerator;
 
-private enum Action {
+enum Action {
   SIMULATE, DALTONIZE, DALTONIZE_AND_SIMULATE
 }
 
@@ -58,7 +58,7 @@ public void setup() {
   setCurrentGenerators();
 }
 
-public void draw() {
+void draw() {
   background(255);
 
   PImage img = pimages[pictureIndex];
@@ -78,7 +78,7 @@ public void draw() {
   image(img, 150, 325);
 }
 
-private void setCurrentGenerators() {
+void setCurrentGenerators() {
   if (deficiency == null) {
     return;
   } else {

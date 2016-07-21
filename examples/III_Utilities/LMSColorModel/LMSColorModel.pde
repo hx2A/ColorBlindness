@@ -256,7 +256,7 @@ Vector adjustLMS(char channel, Vector lms, float amount) {
   }
 }
 
-private Slider addSlider(String variable, String caption, float y, int min, int max, int sliderColor) {
+Slider addSlider(String variable, String caption, float y, int min, int max, int sliderColor) {
   Slider slider = cp5.addSlider(variable);
   slider.setPosition(10, 50 + y);
   slider.setRange(min, max);
