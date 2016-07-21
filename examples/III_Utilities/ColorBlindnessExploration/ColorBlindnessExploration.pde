@@ -26,10 +26,7 @@ int pictureIndex;
 Deficiency deficiency;
 int amount;
 
-String[] filenames = { "hues.jpg", "beach.jpg", "fall_trees.jpg", "sunset.jpg", "van_gogh_starry_night.jpg" };
-
 String actionNames = "Simulate, Daltonize, Daltonize and Simulate";
-String pictureNames = "Color Hues, Beach Scene, Fall Trees, Sunset, Van Gogh's Starry Night";
 String deficiencyNames = "Protanope, Deuteranope, Tritanope, Achromatope";
 
 Map<Integer, String> actionNameMap;
@@ -44,9 +41,7 @@ public void setup() {
   colorBlindness = new ColorBlindness(this);
   colorBlindness.deactivate();
 
-  pimages = loadPictures(filenames);
   actionNameMap = createDropdownMap(actionNames);
-  pictureNameMap = createDropdownMap(pictureNames);
   deficiencyNameMap = createDropdownMap(deficiencyNames);
 
   action = null;
@@ -54,6 +49,7 @@ public void setup() {
   deficiency = null;
   amount = 100;
 
+  preparePictureData();
   createControls();
   setCurrentGenerators();
 }
@@ -110,15 +106,16 @@ void createControls() {
   actionDropdown.bringToFront().close();
 }
 
-PImage[] loadPictures(String[] filenames) {
-  PImage[] pictures = new PImage[filenames.length];
+void preparePictureData() {
+  File[] files = (new File("data")).listFiles();
 
-  int index = 0;
-  for (String filename : filenames) {
-    pictures[index++] = loadImage(filename);
+  pictureNameMap = new HashMap<Integer, String>();
+  pimages = new PImage[files.length];
+
+  for (int i = 0; i < files.length; ++i) {
+    pimages[i] = loadImage(files[i].getAbsolutePath());
+    pictureNameMap.put(i, files[i].getName().replace('_', ' ').split("\\.")[0]);
   }
-
-  return pictures;
 }
 
 Map<Integer, String> createDropdownMap(String itemList) {
