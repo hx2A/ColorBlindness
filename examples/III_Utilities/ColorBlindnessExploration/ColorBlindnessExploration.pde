@@ -1,29 +1,34 @@
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import colorblind.ColorBlindness;
-import colorblind.Deficiency;
-import colorblind.generators.ColorTranformGenerator;
 import controlP5.ControlEvent;
 import controlP5.ControlListener;
 import controlP5.ControlP5;
 import controlP5.DropdownList;
 import controlP5.Slider;
 
+import colorblind.ColorBlindness;
+import colorblind.Deficiency;
+import colorblind.generators.ColorTranformGenerator;
+
+private enum Action {
+  SIMULATE, DALTONIZE, DALTONIZE_AND_SIMULATE
+}
+
 ControlP5 cp5;
 ColorBlindness colorBlindness;
-ColorTranformGenerator currentGenerator;
+ColorTranformGenerator currentSimulator;
+ColorTranformGenerator currentDaltonizer;
 
 // ControlP5 variables
-String actionName;
+Action action;
 int pictureIndex;
 Deficiency deficiency;
 int amount;
 
 String[] filenames = { "hues.jpg", "beach.jpg", "fall_trees.jpg", "sunset.jpg", "van_gogh_starry_night.jpg" };
 
-String actionNames = "Simulate, Daltonize";
+String actionNames = "Simulate, Daltonize, Daltonize and Simulate";
 String pictureNames = "Color Hues, Beach Scene, Fall Trees, Sunset, Van Gogh's Starry Night";
 String deficiencyNames = "Protanope, Deuteranope, Tritanope, Achromatope";
 
@@ -32,7 +37,7 @@ Map<Integer, String> pictureNameMap;
 Map<Integer, String> deficiencyNameMap;
 PImage[] pimages;
 
-void setup() {
+public void setup() {
   size(500, 625);
 
   cp5 = new ControlP5(this);
@@ -44,54 +49,61 @@ void setup() {
   pictureNameMap = createDropdownMap(pictureNames);
   deficiencyNameMap = createDropdownMap(deficiencyNames);
 
-  actionName = null;
+  action = null;
   pictureIndex = 0;
   deficiency = null;
-  amount = 0;
+  amount = 100;
 
   createControls();
-  currentGenerator = setCurrentGenerator();
+  setCurrentGenerators();
 }
 
-void draw() {
+public void draw() {
   background(255);
 
-  image(pimages[pictureIndex], 150, 0);
+  PImage img = pimages[pictureIndex];
 
-  PImage dualImage = pimages[pictureIndex];
-  if (currentGenerator != null) {
-    dualImage = currentGenerator.transformPImage(dualImage);
+  image(img, 150, 0);
+
+  if (action == null || currentSimulator == null || currentDaltonizer == null) {
+    // do nothing
+  } else if (action == Action.SIMULATE) {
+    img = currentSimulator.transformPImage(img);
+  } else if (action == Action.DALTONIZE) {
+    img = currentDaltonizer.transformPImage(img);
+  } else if (action == Action.DALTONIZE_AND_SIMULATE) {
+    img = currentDaltonizer.transformPImage(img);
+    img = currentSimulator.transformPImage(img);
   }
-  image(dualImage, 150, 325);
+  image(img, 150, 325);
 }
 
-ColorTranformGenerator setCurrentGenerator() {
-  if (actionName == null || deficiency == null) {
-    return null;
-  } else if (actionName.equals("Simulate")) {
-    return colorBlindness.simulate(deficiency).setDynamicAmount()
-            .setAmount(amount / 100f);
+private void setCurrentGenerators() {
+  if (deficiency == null) {
+    return;
   } else {
-    return colorBlindness.daltonize(deficiency).setDynamicAmount()
-            .setAmount(amount / 100f);
+    currentSimulator = colorBlindness.simulate(deficiency).setDynamicAmount()
+        .setAmount(amount / 100f);
+    currentDaltonizer = colorBlindness.daltonize(deficiency)
+        .setDynamicAmount().setAmount(amount / 100f);
   }
 }
 
 void createControls() {
   float yOffset = 0.5f;
-  int controlSpace = 23;
+  int controlSpace = 30;
 
   DropdownList actionDropdown = addDropdown("Transformation",
-          (controlSpace * yOffset++), actionNameMap).addListener(
-          new ActionListener());
+      (controlSpace * yOffset++), actionNameMap).addListener(
+      new ActionListener());
   DropdownList pictureDropdown = addDropdown("Picture",
-          (controlSpace * yOffset++), pictureNameMap).addListener(
-          new PictureListener());
+      (controlSpace * yOffset++), pictureNameMap).addListener(
+      new PictureListener());
   DropdownList deficiencyDropdown = addDropdown("Color Deficiency",
-          (controlSpace * yOffset++), deficiencyNameMap).addListener(
-          new DeficiencyListener());
+      (controlSpace * yOffset++), deficiencyNameMap).addListener(
+      new DeficiencyListener());
   addSlider("amount", "% Amount", (controlSpace * yOffset++), 0, 100)
-          .addListener(new AmountListener());
+      .addListener(new AmountListener());
 
   deficiencyDropdown.bringToFront().close();
   pictureDropdown.bringToFront().close();
@@ -119,14 +131,13 @@ Map<Integer, String> createDropdownMap(String itemList) {
 }
 
 DropdownList addDropdown(String name, float y,
-        Map<Integer, String> menuItems) {
-  int itemHeight = 18;
-  DropdownList dropdownList = cp5.addDropdownList(name)
-            .setPosition(10, y)
-            .setSize(120, (menuItems.size() + 1) * itemHeight)
-            .setItemHeight(itemHeight).setBarHeight(itemHeight);
+    Map<Integer, String> menuItems) {
+  int itemHeight = 25;
+  DropdownList dropdownList = cp5.addDropdownList(name).setPosition(10, y)
+      .setSize(120, (menuItems.size() + 1) * itemHeight)
+      .setItemHeight(itemHeight).setBarHeight(itemHeight);
   for (Entry<Integer, String> entry : menuItems.entrySet()) {
-      dropdownList.addItem(entry.getValue(), entry.getKey());
+    dropdownList.addItem(entry.getValue(), entry.getKey());
   }
   dropdownList.setColorValueLabel(color(255));
   dropdownList.setColorForeground(0xFF999999);
@@ -140,7 +151,7 @@ Slider addSlider(String variable, String caption, float y, int min, int max) {
   Slider slider = cp5.addSlider(variable);
   slider.setPosition(10, y);
   slider.setRange(min, max);
-  slider.setSize(80, 18);
+  slider.setSize(80, 25);
   slider.setCaptionLabel(caption);
   slider.setColorCaptionLabel(color(0));
   slider.setColorValueLabel(color(255));

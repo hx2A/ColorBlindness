@@ -1,30 +1,28 @@
 class DeficiencyListener implements ControlListener {
   public void controlEvent(ControlEvent theEvent) {
-    int newDeficiencyNumber = (int) theEvent.getValue();
-    String newDeficiencyName = deficiencyNameMap.get(newDeficiencyNumber);
+    String newDeficiencyName = deficiencyNameMap.get((int) theEvent.getValue());
 
-    if (deficiency == null
-            || !deficiency.toString().equals(newDeficiencyName)) {
+    if (deficiency == null || !deficiency.toString().equals(newDeficiencyName)) {
       println("setting deficiency to: " + newDeficiencyName);
 
-      switch (newDeficiencyNumber) {
-      case 0:
+      switch (newDeficiencyName) {
+      case "Protanope":
         deficiency = Deficiency.PROTANOPE;
         break;
-      case 1:
+      case "Deuteranope":
         deficiency = Deficiency.DEUTERANOPE;
         break;
-      case 2:
+      case "Tritanope":
         deficiency = Deficiency.TRITANOPE;
         break;
-      case 3:
+      case "Achromatope":
         deficiency = Deficiency.ACHROMATOPE;
         break;
       default:
         throw new RuntimeException("Unknown color deficiency");
       }
 
-      currentGenerator = setCurrentGenerator();
+      setCurrentGenerators();
     }
   }
 }
