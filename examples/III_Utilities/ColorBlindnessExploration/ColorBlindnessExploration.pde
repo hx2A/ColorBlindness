@@ -1,5 +1,6 @@
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.List;
 
 import controlP5.ControlEvent;
 import controlP5.ControlListener;
@@ -107,7 +108,7 @@ void createControls() {
 }
 
 void preparePictureData() {
-  File[] files = (new File("data")).listFiles();
+  File[] files = (new File(dataPath(""))).listFiles();
 
   pictureNameMap = new HashMap<Integer, String>();
   List<PImage> pictures = new ArrayList<PImage>();
