@@ -110,12 +110,19 @@ void preparePictureData() {
   File[] files = (new File("data")).listFiles();
 
   pictureNameMap = new HashMap<Integer, String>();
-  pimages = new PImage[files.length];
+  List<PImage> pictures = new ArrayList<PImage>();
 
   for (int i = 0; i < files.length; ++i) {
-    pimages[i] = loadImage(files[i].getAbsolutePath());
-    pictureNameMap.put(i, files[i].getName().replace('_', ' ').split("\\.")[0]);
+    PImage picture = loadImage(files[i].getAbsolutePath());
+    if (picture != null) {
+      // if the picture cannot be loaded, loadImage returns null.
+      // no need to print an error message as Processing does that
+      // for us.
+      pictures.add(picture);
+      pictureNameMap.put(i, files[i].getName().replace('_', ' ').split("\\.")[0]);
+    }
   }
+  pimages = pictures.toArray(new PImage[pictures.size()]);
 }
 
 Map<Integer, String> createDropdownMap(String itemList) {
