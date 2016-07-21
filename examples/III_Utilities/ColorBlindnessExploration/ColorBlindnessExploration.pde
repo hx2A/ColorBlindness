@@ -36,7 +36,7 @@ Map<Integer, String> deficiencyNameMap;
 PImage[] pimages;
 
 public void setup() {
-  size(500, 625);
+  size(570, 665);
 
   cp5 = new ControlP5(this);
   colorBlindness = new ColorBlindness(this);
@@ -60,7 +60,7 @@ void draw() {
 
   PImage img = pimages[pictureIndex];
 
-  image(img, 150, 0);
+  image(img, 150, 20);
 
   if (action == null || currentSimulator == null || currentDaltonizer == null) {
     // do nothing
@@ -72,7 +72,7 @@ void draw() {
     img = currentDaltonizer.transformPImage(img);
     img = currentSimulator.transformPImage(img);
   }
-  image(img, 150, 325);
+  image(img, 150, 345);
 }
 
 void setCurrentGenerators() {
