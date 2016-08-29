@@ -1,3 +1,24 @@
+/*
+Simple tool for exploring the the LMS color model. Adjust the the RGB
+color bars to see how the color stimulates the the color receptors, or
+cones, in the human eye.
+
+Dichromat color blind people lack one of the L, M, or S color cones.
+
+Protanopia - lack L cones
+Deuteranopia - lack M cones
+Tritanopia - lack S cones
+
+With only 2 kinds of cones, dichromats are unable to disambiguate colors
+that would maintain the same level of stimulation to the cones they do 
+have but different levels of stimuation to the cone that they are missing.
+
+Adjust the LMS stimulations using the buttons on the lower right side
+of the sketch. Note that some combinations of L, M, and S stimulations
+are not feasible because of the overlap of the cones' spectral absorption
+functions. This sketch will keep you from making that mistake.
+*/
+
 import colorblind.ColorUtilities;
 import colorblind.generators.util.Matrix;
 import colorblind.generators.util.Vector;

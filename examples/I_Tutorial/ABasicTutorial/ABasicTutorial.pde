@@ -1,7 +1,30 @@
+/*
+Basic ColorBlindness tutorial.
+
+To add color blindness simulation to your sketch, you need to do two things.
+
+1. Import the library.
+
+    import colorblind.ColorBlindness;
+
+You can do this with the Sketch => Import Library... => Color Blindness menu option.
+
+2. In your setup function, create an instance of the ColorBlindness library and
+specify color deficiency:
+
+    ColorBlindness colorBlindness = new ColorBlindness(this);
+    colorBlindness.simulateProtanopia();
+
+That's it! The library pre-computes a lookup table on startup and uses this to do a
+color transformation after your draw method runs.
+
+There are more complex settings available. Look at the other tutorial, example, and
+tutorial sketches to learn more.
+ */
+
 import colorblind.ColorBlindness;
 
 PGraphics label;
-ColorBlindness colorBlindness;
 
 float rot = 75f;
 float rotX = rot * 0.5f;
@@ -10,8 +33,17 @@ float rotZ = rot * 0.3f;
 
 void setup() {
   size(300, 300, P3D);
-  colorBlindness = new ColorBlindness(this);
-  colorBlindness.simulateProtanope();
+  // this is how the library 'attaches' to your sketch:
+  ColorBlindness colorBlindness = new ColorBlindness(this);
+  // change the below line of code to experiment
+  colorBlindness.simulateProtanopia();
+  //colorBlindness.simulateDeuteranopia();
+  //colorBlindness.simulateTritanopia();
+  //colorBlindness.simulateAchromatopsia();
+  //colorBlindness.daltonizeProtanopia();
+  //colorBlindness.daltonizeDeuteranopia();
+  //colorBlindness.daltonizeTritanopia();
+  //colorBlindness.daltonizeAchromatopsia();
 
   label = createGraphics(150, 20);
   label.beginDraw();
@@ -72,9 +104,4 @@ void draw() {
   rotateZ(radians(rotZ));
   box(boxSize);
   popMatrix();
-}
-
-void postDraw() {
-  copy(label, 0, 0, label.width, label.height, width - label.width,
-       height - label.height, label.width, label.height);
 }

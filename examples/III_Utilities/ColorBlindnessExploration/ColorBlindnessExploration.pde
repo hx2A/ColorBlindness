@@ -1,3 +1,24 @@
+/*
+Color Blindness Exploration Tool
+ ================================
+ 
+ Use the dropdowns on the left of the sketch to explore different
+ kinds of color blindness. 
+ 
+ Transformation
+ --------------
+ Simulate - simulate color blindness
+ Daltonize - daltonization color correction
+ Daltonize and Simulate - simulate, then daltonize
+ 
+ The last one will give you a better idea of how well the
+ daltonization works.
+ 
+ Use the picture dropdown to experiment with different images.
+ 
+ Vary the amount slide bar to explore partial color blindness.
+ */
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.List;
@@ -28,7 +49,7 @@ Deficiency deficiency;
 int amount;
 
 String actionNames = "Simulate, Daltonize, Daltonize and Simulate";
-String deficiencyNames = "Protanope, Deuteranope, Tritanope, Achromatope";
+String deficiencyNames = "Protanopia, Deuteranopia, Tritanopia, Achromatopsia";
 
 Map<Integer, String> actionNameMap;
 Map<Integer, String> pictureNameMap;
@@ -40,6 +61,9 @@ public void setup() {
 
   cp5 = new ControlP5(this);
   colorBlindness = new ColorBlindness(this);
+  // deactivate() turns off automatic transformations of the entire sketch
+  // window. Use this if you only want to transform a PImage or a part of
+  // your sketch.
   colorBlindness.deactivate();
 
   actionNameMap = createDropdownMap(actionNames);
@@ -62,13 +86,21 @@ void draw() {
 
   image(img, 150, 20);
 
+  /*
+  Calling .transformPImage(img) creates a copy of the PImage object and transforms
+   the copy.  
+   */
+
   if (action == null || currentSimulator == null || currentDaltonizer == null) {
     // do nothing
   } else if (action == Action.SIMULATE) {
+    // simulate color blindness using current color blindness settings
     img = currentSimulator.transformPImage(img);
   } else if (action == Action.DALTONIZE) {
+    // perform daltonization using current color blindness settings
     img = currentDaltonizer.transformPImage(img);
   } else if (action == Action.DALTONIZE_AND_SIMULATE) {
+    // perform daltonization and then simulation
     img = currentDaltonizer.transformPImage(img);
     img = currentSimulator.transformPImage(img);
   }
@@ -79,10 +111,17 @@ void setCurrentGenerators() {
   if (deficiency == null) {
     return;
   } else {
+    /*
+     * create generators for color blindness simulation and daltonization.
+     *
+     * for both, use .setDynamicAmount() to indicate that the Amount value may
+     * change in the future. This enables the library to optimize its
+     * performance. 
+     */
     currentSimulator = colorBlindness.simulate(deficiency).setDynamicAmount()
-        .setAmount(amount / 100f);
+      .setAmount(amount / 100f);
     currentDaltonizer = colorBlindness.daltonize(deficiency)
-        .setDynamicAmount().setAmount(amount / 100f);
+      .setDynamicAmount().setAmount(amount / 100f);
   }
 }
 
@@ -90,17 +129,17 @@ void createControls() {
   float yOffset = 0.5f;
   int controlSpace = 30;
 
-  DropdownList actionDropdown = addDropdown("Transformation",
-      (controlSpace * yOffset++), actionNameMap).addListener(
-      new ActionListener());
-  DropdownList pictureDropdown = addDropdown("Picture",
-      (controlSpace * yOffset++), pictureNameMap).addListener(
-      new PictureListener());
-  DropdownList deficiencyDropdown = addDropdown("Color Deficiency",
-      (controlSpace * yOffset++), deficiencyNameMap).addListener(
-      new DeficiencyListener());
+  DropdownList actionDropdown = addDropdown("Transformation", 
+    (controlSpace * yOffset++), actionNameMap).addListener(
+    new ActionListener());
+  DropdownList pictureDropdown = addDropdown("Picture", 
+    (controlSpace * yOffset++), pictureNameMap).addListener(
+    new PictureListener());
+  DropdownList deficiencyDropdown = addDropdown("Color Deficiency", 
+    (controlSpace * yOffset++), deficiencyNameMap).addListener(
+    new DeficiencyListener());
   addSlider("amount", "% Amount", (controlSpace * yOffset++), 0, 100)
-      .addListener(new AmountListener());
+    .addListener(new AmountListener());
 
   deficiencyDropdown.bringToFront().close();
   pictureDropdown.bringToFront().close();
@@ -135,12 +174,12 @@ Map<Integer, String> createDropdownMap(String itemList) {
   return map;
 }
 
-DropdownList addDropdown(String name, float y,
-    Map<Integer, String> menuItems) {
+DropdownList addDropdown(String name, float y, 
+  Map<Integer, String> menuItems) {
   int itemHeight = 25;
   DropdownList dropdownList = cp5.addDropdownList(name).setPosition(10, y)
-      .setSize(120, (menuItems.size() + 1) * itemHeight)
-      .setItemHeight(itemHeight).setBarHeight(itemHeight);
+    .setSize(120, (menuItems.size() + 1) * itemHeight)
+    .setItemHeight(itemHeight).setBarHeight(itemHeight);
   for (Entry<Integer, String> entry : menuItems.entrySet()) {
     dropdownList.addItem(entry.getValue(), entry.getKey());
   }

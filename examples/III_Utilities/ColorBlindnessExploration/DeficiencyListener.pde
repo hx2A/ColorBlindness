@@ -6,17 +6,17 @@ class DeficiencyListener implements ControlListener {
       println("setting deficiency to: " + newDeficiencyName);
 
       switch (newDeficiencyName) {
-      case "Protanope":
-        deficiency = Deficiency.PROTANOPE;
+      case "Protanopia":
+        deficiency = Deficiency.PROTANOPIA;
         break;
-      case "Deuteranope":
-        deficiency = Deficiency.DEUTERANOPE;
+      case "Deuteranopia":
+        deficiency = Deficiency.DEUTERANOPIA;
         break;
-      case "Tritanope":
-        deficiency = Deficiency.TRITANOPE;
+      case "Tritanopia":
+        deficiency = Deficiency.TRITANOPIA;
         break;
-      case "Achromatope":
-        deficiency = Deficiency.ACHROMATOPE;
+      case "Achromatopsia":
+        deficiency = Deficiency.ACHROMATOPSIA;
         break;
       default:
         throw new RuntimeException("Unknown color deficiency");

@@ -1,3 +1,16 @@
+/*
+Simple example showing the mouse-overs for 3 different button designs.
+
+Uncomment line 74 to simulate color blindness and explore how the button
+designs would look to a color blind person.
+
+Button 1 - mouse-over effect is invisible to a color blind person
+Button 2 - color blind person can detect a change in brightness
+Button 3 - Text and button outline make it very clear that the button is activated
+
+Basic design principle is to not depend on color a color change by itself to signal
+anything.
+*/
 import colorblind.ColorBlindness;
 import colorblind.ColorUtilities;
 import colorblind.Deficiency;
@@ -52,14 +65,23 @@ void setup() {
   button3X2 = button3X1 + buttonWidth;
   button3Y2 = button3Y1 + buttonHeight;
 
-  deficiency = Deficiency.PROTANOPE;
+  // If you change the deficency you will also want to
+  // change colorHover and colorHover2.
+  deficiency = Deficiency.PROTANOPIA;
   colorBlindness = new ColorBlindness(this);
-  colorBlindness.renderRegular();
+  // ******************************************************
+  // uncomment the below line to simulate color blindness
   // colorBlindness.simulate(deficiency);
+  // ******************************************************
 
   colorHover = color(0, 80, 50);
   colorHover2 = color(0, 80, 80);
-  colorOff = ColorUtilities.confusingColor(deficiency, colorHover, 0.2f);
+
+  // create a new color that a color blind person would think looks
+  // the same as colorHover.
+  // the third parameter can be any float in the range [0, 1]. Returned
+  // colors lie on the colorHover's confusion line.
+  colorOff = ColorUtilities.confusingColor(deficiency, colorHover, 0.2);
 }
 
 void draw() {
@@ -112,4 +134,3 @@ void draw() {
 boolean within(int minX, int minY, int maxX, int maxY) {
   return (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY);
 }
-

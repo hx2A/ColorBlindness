@@ -1,11 +1,15 @@
+/*
+ Basic Game of Life Implementation
+ */
+
 class GameOfLife {
 
   private boolean[] state;
   public int rows;
   public int cols;
 
-  private final int[][] NEIGHBORS = { { -1, -1 }, { -1, 0 }, { -1, +1 },
-      { 0, -1 }, { 0, +1 }, { +1, -1 }, { +1, 0 }, { +1, +1 } };
+  private final int[][] NEIGHBORS = { { -1, -1 }, { -1, 0 }, { -1, +1 }, 
+    { 0, -1 }, { 0, +1 }, { +1, -1 }, { +1, 0 }, { +1, +1 } };
 
   public GameOfLife(int rows, int cols) {
     this.rows = rows;

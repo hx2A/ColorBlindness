@@ -1,3 +1,10 @@
+/*
+Simple utility to allow users to upload an arbitrary image, perform color
+blindness simulation or daltonization, and then save to a file.
+
+Error messages appear in the sketch and in the console.
+*/
+
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -31,7 +38,7 @@ boolean wroteOutput;
 String status;
 
 String actionNames = "Simulate, Daltonize, Daltonize and Simulate";
-String deficiencyNames = "Protanope, Deuteranope, Tritanope, Achromatope";
+String deficiencyNames = "Protanopia, Deuteranopia, Tritanopia, Achromatopsia";
 
 Map<Integer, String> actionNameMap;
 Map<Integer, String> deficiencyNameMap;
@@ -282,6 +289,13 @@ void setCurrentGenerators() {
   if (deficiency == null) {
     return;
   } else {
+    /*
+     * create generators for color blindness simulation and daltonization.
+     *
+     * for both, use .setDynamicAmount() to indicate that the Amount value may
+     * change in the future. This enables the library to optimize its
+     * performance. 
+     */
     currentSimulator = colorBlindness.simulate(deficiency)
         .setDynamicAmount().setAmount(amount / 100f);
     currentDaltonizer = colorBlindness.daltonize(deficiency)
