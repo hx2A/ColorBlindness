@@ -6,7 +6,6 @@ import colorblind.Deficiency;
 import colorblind.generators.util.Matrix;
 
 /**
- * 
  * Base class for all of the color transform generators.
  * 
  * This class provides some default matrix values and implementations of some
@@ -46,7 +45,7 @@ public abstract class ColorTranformGenerator extends Generator {
         applyGammaCorrectionLUT = preComputeApplyGammaCorrectionStandardrgbLUT(MAX_ENCODED_VALUE);
     }
 
-    protected abstract int[] precalcAchromatopeColorMap(float amount);
+    protected abstract int[] precalcAchromatopsiaColorMap(float amount);
 
     protected abstract int[] precalcDichromaticColorMap(Matrix sim, float amount);
 
@@ -60,16 +59,16 @@ public abstract class ColorTranformGenerator extends Generator {
      */
     private int[] computeColorMapLookup(float amount) {
         switch (deficiency) {
-        case ACHROMATOPE:
-            return precalcAchromatopeColorMap(amount);
-        case PROTANOPE:
-            return precalcDichromaticColorMap(ColorUtilities.protanopeSim,
+        case ACHROMATOPSIA:
+            return precalcAchromatopsiaColorMap(amount);
+        case PROTANOPIA:
+            return precalcDichromaticColorMap(ColorUtilities.protanopiaSim,
                     amount);
-        case DEUTERANOPE:
-            return precalcDichromaticColorMap(ColorUtilities.deuteranopeSim,
+        case DEUTERANOPIA:
+            return precalcDichromaticColorMap(ColorUtilities.deuteranopiaSim,
                     amount);
-        case TRITANOPE:
-            return precalcDichromaticColorMap(ColorUtilities.tritanopeSim,
+        case TRITANOPIA:
+            return precalcDichromaticColorMap(ColorUtilities.tritanopiaSim,
                     amount);
         default:
             throw new RuntimeException("ERROR: Unknown color deficiency");

@@ -27,20 +27,20 @@ public class DaltonizeGenerator extends ColorTranformGenerator {
 
     public static DaltonizeGenerator createDaltonizer(Deficiency colorBlindness) {
         switch (colorBlindness) {
-        case PROTANOPE:
-            return new DaltonizeGenerator(Deficiency.PROTANOPE);
-        case DEUTERANOPE:
-            return new DaltonizeGenerator(Deficiency.DEUTERANOPE);
-        case TRITANOPE:
-            return new DaltonizeGenerator(Deficiency.TRITANOPE);
-        case ACHROMATOPE:
-            return new DaltonizeGenerator(Deficiency.ACHROMATOPE);
+        case PROTANOPIA:
+            return new DaltonizeGenerator(Deficiency.PROTANOPIA);
+        case DEUTERANOPIA:
+            return new DaltonizeGenerator(Deficiency.DEUTERANOPIA);
+        case TRITANOPIA:
+            return new DaltonizeGenerator(Deficiency.TRITANOPIA);
+        case ACHROMATOPSIA:
+            return new DaltonizeGenerator(Deficiency.ACHROMATOPSIA);
         default:
             throw new RuntimeException("Unknown color blindness deficiency");
         }
     }
 
-    protected int[] precalcAchromatopeColorMap(float amount) {
+    protected int[] precalcAchromatopsiaColorMap(float amount) {
         int[] colorMap = new int[256 * 256 * 256];
         for (int color = 0; color < colorMap.length; ++color) {
             int startRed = (color & 0x00FF0000) >> 16;
@@ -55,9 +55,9 @@ public class DaltonizeGenerator extends ColorTranformGenerator {
             // simulate colorblindness
             Vector linRGB = new Vector(linRed, linGreen, linBlue);
             float simGray = ColorUtilities.clip(linRed
-                    * ColorUtilities.achromatopeSim.v1 + linGreen
-                    * ColorUtilities.achromatopeSim.v2 + linBlue
-                    * ColorUtilities.achromatopeSim.v3);
+                    * ColorUtilities.achromatopsiaSim.v1 + linGreen
+                    * ColorUtilities.achromatopsiaSim.v2 + linBlue
+                    * ColorUtilities.achromatopsiaSim.v3);
             Vector simRGB = new Vector(simGray, simGray, simGray);
 
             // calculate the color delta in color space, rotate it, and

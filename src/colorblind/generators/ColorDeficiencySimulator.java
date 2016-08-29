@@ -28,20 +28,20 @@ public class ColorDeficiencySimulator extends ColorTranformGenerator {
     public static ColorDeficiencySimulator createSimulator(
             Deficiency colorBlindness) {
         switch (colorBlindness) {
-        case PROTANOPE:
-            return new ColorDeficiencySimulator(Deficiency.PROTANOPE);
-        case DEUTERANOPE:
-            return new ColorDeficiencySimulator(Deficiency.DEUTERANOPE);
-        case TRITANOPE:
-            return new ColorDeficiencySimulator(Deficiency.TRITANOPE);
-        case ACHROMATOPE:
-            return new ColorDeficiencySimulator(Deficiency.ACHROMATOPE);
+        case PROTANOPIA:
+            return new ColorDeficiencySimulator(Deficiency.PROTANOPIA);
+        case DEUTERANOPIA:
+            return new ColorDeficiencySimulator(Deficiency.DEUTERANOPIA);
+        case TRITANOPIA:
+            return new ColorDeficiencySimulator(Deficiency.TRITANOPIA);
+        case ACHROMATOPSIA:
+            return new ColorDeficiencySimulator(Deficiency.ACHROMATOPSIA);
         default:
             throw new RuntimeException("Unknown color blindness deficiency");
         }
     }
 
-    protected int[] precalcAchromatopeColorMap(float amount) {
+    protected int[] precalcAchromatopsiaColorMap(float amount) {
         int[] colorMap = new int[256 * 256 * 256];
 
         for (int color = 0; color < colorMap.length; ++color) {
@@ -56,9 +56,9 @@ public class ColorDeficiencySimulator extends ColorTranformGenerator {
 
             // simulate colorblindness
             int simRed = applyGammaCorrectionLUT[(int) (ColorUtilities
-                    .clip(linRed * ColorUtilities.achromatopeSim.v1 + linGreen
-                            * ColorUtilities.achromatopeSim.v2 + linBlue
-                            * ColorUtilities.achromatopeSim.v3) * (MAX_ENCODED_VALUE - 1))];
+                    .clip(linRed * ColorUtilities.achromatopsiaSim.v1 + linGreen
+                            * ColorUtilities.achromatopsiaSim.v2 + linBlue
+                            * ColorUtilities.achromatopsiaSim.v3) * (MAX_ENCODED_VALUE - 1))];
             int simGreen = simRed;
             int simBlue = simRed;
 

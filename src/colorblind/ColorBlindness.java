@@ -83,20 +83,20 @@ public class ColorBlindness implements PConstants {
         return generator;
     }
 
-    public ColorTranformGenerator simulateAchromatope() {
-        return simulate(Deficiency.ACHROMATOPE);
+    public ColorTranformGenerator simulateAchromatopsia() {
+        return simulate(Deficiency.ACHROMATOPSIA);
     }
 
-    public ColorTranformGenerator simulateDeuteranope() {
-        return simulate(Deficiency.DEUTERANOPE);
+    public ColorTranformGenerator simulateDeuteranopia() {
+        return simulate(Deficiency.DEUTERANOPIA);
     }
 
-    public ColorTranformGenerator simulateProtanope() {
-        return simulate(Deficiency.PROTANOPE);
+    public ColorTranformGenerator simulateProtanopia() {
+        return simulate(Deficiency.PROTANOPIA);
     }
 
-    public ColorTranformGenerator simulateTritanope() {
-        return simulate(Deficiency.TRITANOPE);
+    public ColorTranformGenerator simulateTritanopia() {
+        return simulate(Deficiency.TRITANOPIA);
     }
 
     public ColorTranformGenerator daltonize(Deficiency colorBlindness) {
@@ -108,20 +108,20 @@ public class ColorBlindness implements PConstants {
         return generator;
     }
 
-    public ColorTranformGenerator daltonizeAchromatope() {
-        return daltonize(Deficiency.ACHROMATOPE);
+    public ColorTranformGenerator daltonizeAchromatopsia() {
+        return daltonize(Deficiency.ACHROMATOPSIA);
     }
 
-    public ColorTranformGenerator daltonizeDeuteranope() {
-        return daltonize(Deficiency.DEUTERANOPE);
+    public ColorTranformGenerator daltonizeDeuteranopia() {
+        return daltonize(Deficiency.DEUTERANOPIA);
     }
 
-    public ColorTranformGenerator daltonizeProtanope() {
-        return daltonize(Deficiency.PROTANOPE);
+    public ColorTranformGenerator daltonizeProtanopia() {
+        return daltonize(Deficiency.PROTANOPIA);
     }
 
-    public ColorTranformGenerator daltonizeTritanope() {
-        return daltonize(Deficiency.TRITANOPE);
+    public ColorTranformGenerator daltonizeTritanopia() {
+        return daltonize(Deficiency.TRITANOPIA);
     }
 
     public RegularRenderer renderRegular() {
