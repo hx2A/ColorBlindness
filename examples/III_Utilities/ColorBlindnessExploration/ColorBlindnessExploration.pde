@@ -2,8 +2,8 @@
 Color Blindness Exploration Tool
  ================================
  
- Use the dropdowns on the left of the sketch to explore different
- kinds of color blindness. 
+ Use the dropdowns on the left of the sketch to explore different kinds of
+ color blindness. 
  
  Transformation
  --------------
@@ -17,6 +17,9 @@ Color Blindness Exploration Tool
  Use the picture dropdown to experiment with different images.
  
  Vary the amount slide bar to explore partial color blindness.
+ 
+ If you like you can add new pictures to the data directory. Make sure the new
+ image sizes are 400x300.
  */
 
 import java.util.Map;
