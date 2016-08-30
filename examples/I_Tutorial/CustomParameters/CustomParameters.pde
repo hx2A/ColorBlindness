@@ -27,9 +27,9 @@
  incorrect. The ColorBlindness library does do the necessary gamma
  adjustment so the results won't be exactly the same as most of the tools out
  there.]
-
+ 
  If you can make a cogent argument for why your parameters are better than
- mine, please email me: jim at ixora.io. I am not color blind so it is hard
+ mine, please let me know: jim at ixora.io. I am not color blind so it is hard
  for me to evaluate better or worse simulations.
  */
 
@@ -53,7 +53,7 @@ void setup() {
   colorBlindness = new ColorBlindness(this);
 
   /*
- The lmx2rgb matrix must be the inverse of the rgb2lms matrix.
+   The lmx2rgb matrix must be the inverse of the rgb2lms matrix.
    */
   ColorUtilities.rgb2lms = new Matrix(17.8824, 43.5161, 4.11935, 
     3.45565, 27.1554, 3.86714, 0.0299566, 0.184309, 1.46709);
@@ -62,7 +62,7 @@ void setup() {
     -0.000365296938, -0.00412161469, 0.693511405);
 
   /*
- If you change the above two matrices you must also change the simulation
+   If you change the above two matrices you must also change the simulation
    matrix. This matrix is a function of the above matrices. Check the
    documentation for more details.
    */
