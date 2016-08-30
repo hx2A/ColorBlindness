@@ -32,14 +32,14 @@ public class ColorUtilities {
      * 
      * public so the user can change them if desired.
      */
-    public static Matrix protanopiaSim = new Matrix(0.0f, 1.05118294f,
-            -0.05116099f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+    public static Matrix protanopiaSim = new Matrix(0.0f, 0.90822864f,
+            0.008192f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
     public static Matrix deuteranopiaSim = new Matrix(1.0f, 0.0f, 0.0f,
-            0.9513092f, 0.0f, 0.04866992f, 0.0f, 0.0f, 1.0f);
+            1.10104433f, 0.0f, -0.00901975f, 0.0f, 0.0f, 1.0f);
 
     public static Matrix tritanopiaSim = new Matrix(1.0f, 0.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, -19.54614229f, 20.5465713f, 0.0f);
+            1.0f, 0.0f, -0.15773032f, 1.19465634f, 0.0f);
 
     public static Vector achromatopsiaSim = new Vector(0.212656f, 0.715158f,
             0.072186f);
@@ -52,13 +52,13 @@ public class ColorUtilities {
     public static Matrix shiftTowardsVisible = new Matrix(0.0f, 0.0f, 0.0f,
             0.7f, 1.0f, 0.0f, 0.7f, 0.0f, 1.0f);
 
-    public static Matrix rgb2lms = new Matrix(0.31399022f, 0.63951294f,
-            0.04649755f, 0.15537241f, 0.75789446f, 0.08670142f, 0.01775239f,
-            0.10944209f, 0.87256922f);
+    public static Matrix rgb2lms = new Matrix(0.3904725f, 0.54990437f,
+            0.00890159f, 0.07092586f, 0.96310739f, 0.00135809f, 0.02314268f,
+            0.12801221f, 0.93605194f);
 
-    public static Matrix lms2rgb = new Matrix(5.47221206f, -4.6419601f,
-            0.16963708f, -1.1252419f, 2.29317094f, -0.1678952f, 0.02980165f,
-            -0.19318073f, 1.16364789f);
+    public static Matrix lms2rgb = new Matrix(2.85831110f, -1.62870796f,
+            -0.0248186967f, -0.210434776f, 1.15841493f, 0.000320463334f,
+            -0.0418895045f, -0.118154333f, 1.06888657f);
 
     /**
      * Apply Gamma Correction
@@ -163,8 +163,10 @@ public class ColorUtilities {
      * colors in the 3D space that would look identical to a colorblind person.
      * This code attempts to pick multiple colors along those lines.
      * 
-     * @param color initial color
-     * @param x float [0, 1]
+     * @param color
+     *            initial color
+     * @param x
+     *            float [0, 1]
      * @return new color that is determined by x
      */
     public static int confusingColor(Deficiency colorBlindness, int color,
@@ -290,9 +292,12 @@ public class ColorUtilities {
      * of colors in the 3D space that would look identical to a colorblind
      * person. This code attempts to pick multiple colors on those planes.
      * 
-     * @param color initial color
-     * @param x1 float [0, 1]
-     * @param x2 float [0, 1]
+     * @param color
+     *            initial color
+     * @param x1
+     *            float [0, 1]
+     * @param x2
+     *            float [0, 1]
      * @return new color that is determined by x1 and x2
      */
     public static int confusingAchromatopsiaColor(int color, float x1, float x2) {
