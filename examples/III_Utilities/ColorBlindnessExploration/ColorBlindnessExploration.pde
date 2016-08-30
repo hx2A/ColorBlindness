@@ -162,7 +162,11 @@ void preparePictureData() {
       // no need to print an error message as Processing does that
       // for us.
       pictures.add(picture);
-      pictureNameMap.put(i, files[i].getName().replace('_', ' ').split("\\.")[0]);
+      String name = files[i].getName().replace('_', ' ').split("\\.")[0];
+      pictureNameMap.put(i, name);
+      if (name.equals("full spectrum")) {
+        pictureIndex = i;
+      }
     }
   }
   pimages = pictures.toArray(new PImage[pictures.size()]);
