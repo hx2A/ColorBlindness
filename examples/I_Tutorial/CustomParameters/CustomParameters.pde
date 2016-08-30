@@ -5,15 +5,16 @@
  
  I did a fair amount of research into color models and how they are used to
  simulate color blindness. I discovered that many of the color blindness
- simulation applications out there use the same parameters derived from a
- research paper written over 60 years ago for converting linear RGB colors to
- LMS. How to do this conversion can only be estimated empirically and there is
- no one 'correct' way to do it.
+ simulation applications out there are copies of the same algorithm that use
+ identical parameters derived from a research paper written over 40 years ago
+ for converting linear RGB colors to LMS. Those applications also contain a
+ math error for Tritanopia simulations.
  
- There have been numerous research papers written that contain more reliable
- numbers to use, but those research papers require some math calculations to
- incorporate them in a simulation like this. I have done those calculations and
- have documented them online.
+ How to do the RGB => LMS conversion can only be estimated empirically and
+ there is no one 'correct' way to do it. There have been numerous research
+ papers written that contain more reliable numbers to use, but those research
+ papers require some math calculations to incorporate them in a simulation like
+ this. I have done those calculations and have documented them online.
  
  I believe my default ColorBlindness parameters are better than the parameters
  you will find elsewhere, but you are free to disagree and set them to whatever
@@ -28,9 +29,12 @@
  adjustment so the results won't be exactly the same as most of the tools out
  there.]
  
- If you can make a cogent argument for why your parameters are better than
- mine, please let me know: jim at ixora.io. I am not color blind so it is hard
- for me to evaluate better or worse simulations.
+ [Be aware of the math error for Tritanopia simulations.]
+ 
+ The derivation of my parameters are documented online. If you can make a
+ cogent argument for why your parameters are better than mine, please let me
+ know: jim at ixora.io. I am not color blind so it is hard for me to evaluate
+ better or worse simulations.
  */
 
 import colorblind.ColorBlindness;
