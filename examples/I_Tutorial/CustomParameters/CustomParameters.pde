@@ -6,9 +6,9 @@
  I did a fair amount of research into color models and how they are used to
  simulate color blindness. I discovered that many of the color blindness
  simulation applications out there are copies of the same algorithm that use
- identical parameters derived from a research paper written over 40 years ago
- for converting linear RGB colors to LMS. Those applications also contain a
- math error for Tritanopia simulations.
+ identical parameters derived from an old color appearance model for converting
+ linear RGB colors to LMS. Those applications also contain an incorrect
+ assumption for Tritanopia simulations.
  
  How to do the RGB => LMS conversion can only be estimated empirically and
  there is no one 'correct' way to do it. There have been numerous research
@@ -29,7 +29,7 @@
  adjustment so the results won't be exactly the same as most of the tools out
  there.]
  
- [Be aware of the math error for Tritanopia simulations.]
+ [Be aware of the error for Tritanopia simulations.]
  
  The derivation of my parameters are documented online. If you can make a
  cogent argument for why your parameters are better than mine, please let me
@@ -52,8 +52,6 @@ void setup() {
 
   squareSize = (int) random(20, 40);
 
-  Deficiency colorDeficiency = Deficiency.PROTANOPIA;
-
   colorBlindness = new ColorBlindness(this);
 
   /*
@@ -73,7 +71,7 @@ void setup() {
   ColorUtilities.protanopiaSim = new Matrix(0.0, 2.02344, -2.52581, 
     0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
 
-  colorBlindness.simulate(colorDeficiency);
+  colorBlindness.simulateProtanopia();
 }
 
 void draw() {

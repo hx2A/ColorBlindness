@@ -43,9 +43,9 @@ void setup() {
   aliveColors = new int[colorCount];
   deadColors = new int[colorCount];
   for (int i = 0; i < colorCount; ++i) {
-    aliveColors[i] = ColorUtilities.confusingColor(colorDeficiency, 
+    aliveColors[i] = ColorUtilities.confusingDichromaticColor(colorDeficiency,
       aliveBaseColor, i / (float) (colorCount - 1));
-    deadColors[i] = ColorUtilities.confusingColor(colorDeficiency, 
+    deadColors[i] = ColorUtilities.confusingDichromaticColor(colorDeficiency,
       deadBaseColor, i / (float) (colorCount - 1));
   }
 

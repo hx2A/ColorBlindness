@@ -45,7 +45,8 @@ void draw() {
   for (int y = 0; y < 360; y += boxSize + 10) {
     for (int i = 25; i < width; i += boxSize + 10) {
       color baseColor = color(y, 80, 80);
-      fill(ColorUtilities.confusingColor(deficiency, baseColor, i / (float) width));
+      fill(ColorUtilities.confusingDichromaticColor(deficiency, baseColor, 
+        i / (float) width));
       rect(i, y + 25, boxSize, boxSize);
     }
   }

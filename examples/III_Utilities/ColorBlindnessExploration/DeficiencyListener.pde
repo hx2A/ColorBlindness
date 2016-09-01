@@ -18,6 +18,9 @@ class DeficiencyListener implements ControlListener {
       case "Achromatopsia":
         deficiency = Deficiency.ACHROMATOPSIA;
         break;
+      case "Blue Cone Monochromacy":
+        deficiency = Deficiency.BLUE_CONE_MONOCHROMACY;
+        break;
       default:
         throw new RuntimeException("Unknown color deficiency");
       }

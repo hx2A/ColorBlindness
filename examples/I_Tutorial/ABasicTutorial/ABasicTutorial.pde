@@ -40,10 +40,12 @@ void setup() {
   //colorBlindness.simulateDeuteranopia();
   //colorBlindness.simulateTritanopia();
   //colorBlindness.simulateAchromatopsia();
+  //colorBlindness.simulateBlueConeMonochromacy();
   //colorBlindness.daltonizeProtanopia();
   //colorBlindness.daltonizeDeuteranopia();
   //colorBlindness.daltonizeTritanopia();
   //colorBlindness.daltonizeAchromatopsia();
+  //colorBlindness.daltonizeBlueConeMonochromacy();
 
   label = createGraphics(150, 20);
   label.beginDraw();

@@ -36,12 +36,17 @@ public class ColorDeficiencySimulator extends ColorTranformGenerator {
             return new ColorDeficiencySimulator(Deficiency.TRITANOPIA);
         case ACHROMATOPSIA:
             return new ColorDeficiencySimulator(Deficiency.ACHROMATOPSIA);
+        case BLUE_CONE_MONOCHROMACY:
+            return new ColorDeficiencySimulator(
+                    Deficiency.BLUE_CONE_MONOCHROMACY);
+        case CUSTOM:
+            return new ColorDeficiencySimulator(Deficiency.CUSTOM);
         default:
             throw new RuntimeException("Unknown color blindness deficiency");
         }
     }
 
-    protected int[] precalcAchromatopsiaColorMap(float amount) {
+    protected int[] precalcMonochromaticColorMap(Vector sim, float amount) {
         int[] colorMap = new int[256 * 256 * 256];
 
         for (int color = 0; color < colorMap.length; ++color) {
@@ -56,9 +61,8 @@ public class ColorDeficiencySimulator extends ColorTranformGenerator {
 
             // simulate colorblindness
             int simRed = applyGammaCorrectionLUT[(int) (ColorUtilities
-                    .clip(linRed * ColorUtilities.achromatopsiaSim.v1 + linGreen
-                            * ColorUtilities.achromatopsiaSim.v2 + linBlue
-                            * ColorUtilities.achromatopsiaSim.v3) * (MAX_ENCODED_VALUE - 1))];
+                    .clip(linRed * sim.v1 + linGreen * sim.v2 + linBlue
+                            * sim.v3) * (MAX_ENCODED_VALUE - 1))];
             int simGreen = simRed;
             int simBlue = simRed;
 

@@ -15,7 +15,7 @@ import colorblind.generators.RegularRenderer;
 
 public class ColorBlindness implements PConstants {
 
-    public final static String VERSION = "1.0.0";
+    public final static String VERSION = "##library.prettyVersion##";
 
     private PApplet parent;
 
@@ -64,7 +64,7 @@ public class ColorBlindness implements PConstants {
 
     private void welcome() {
         System.out
-                .println("Color Blindness 1.0.0 by Jim Schmitz http://ixora.io");
+                .println("##library.name## ##library.prettyVersion## by ##author##");
     }
 
     public static String version() {
@@ -83,20 +83,24 @@ public class ColorBlindness implements PConstants {
         return generator;
     }
 
-    public ColorTranformGenerator simulateAchromatopsia() {
-        return simulate(Deficiency.ACHROMATOPSIA);
+    public ColorTranformGenerator simulateProtanopia() {
+        return simulate(Deficiency.PROTANOPIA);
     }
 
     public ColorTranformGenerator simulateDeuteranopia() {
         return simulate(Deficiency.DEUTERANOPIA);
     }
 
-    public ColorTranformGenerator simulateProtanopia() {
-        return simulate(Deficiency.PROTANOPIA);
-    }
-
     public ColorTranformGenerator simulateTritanopia() {
         return simulate(Deficiency.TRITANOPIA);
+    }
+
+    public ColorTranformGenerator simulateAchromatopsia() {
+        return simulate(Deficiency.ACHROMATOPSIA);
+    }
+
+    public ColorTranformGenerator simulateBlueConeMonochromacy() {
+        return simulate(Deficiency.BLUE_CONE_MONOCHROMACY);
     }
 
     public ColorTranformGenerator daltonize(Deficiency colorBlindness) {
@@ -108,20 +112,24 @@ public class ColorBlindness implements PConstants {
         return generator;
     }
 
-    public ColorTranformGenerator daltonizeAchromatopsia() {
-        return daltonize(Deficiency.ACHROMATOPSIA);
+    public ColorTranformGenerator daltonizeProtanopia() {
+        return daltonize(Deficiency.PROTANOPIA);
     }
 
     public ColorTranformGenerator daltonizeDeuteranopia() {
         return daltonize(Deficiency.DEUTERANOPIA);
     }
 
-    public ColorTranformGenerator daltonizeProtanopia() {
-        return daltonize(Deficiency.PROTANOPIA);
-    }
-
     public ColorTranformGenerator daltonizeTritanopia() {
         return daltonize(Deficiency.TRITANOPIA);
+    }
+
+    public ColorTranformGenerator daltonizeAchromatopsia() {
+        return daltonize(Deficiency.ACHROMATOPSIA);
+    }
+
+    public ColorTranformGenerator daltonizeBlueConeMonochromacy() {
+        return daltonize(Deficiency.BLUE_CONE_MONOCHROMACY);
     }
 
     public RegularRenderer renderRegular() {

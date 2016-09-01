@@ -35,12 +35,16 @@ public class DaltonizeGenerator extends ColorTranformGenerator {
             return new DaltonizeGenerator(Deficiency.TRITANOPIA);
         case ACHROMATOPSIA:
             return new DaltonizeGenerator(Deficiency.ACHROMATOPSIA);
+        case BLUE_CONE_MONOCHROMACY:
+            return new DaltonizeGenerator(Deficiency.BLUE_CONE_MONOCHROMACY);
+        case CUSTOM:
+            return new DaltonizeGenerator(Deficiency.CUSTOM);
         default:
             throw new RuntimeException("Unknown color blindness deficiency");
         }
     }
 
-    protected int[] precalcAchromatopsiaColorMap(float amount) {
+    protected int[] precalcMonochromaticColorMap(Vector sim, float amount) {
         int[] colorMap = new int[256 * 256 * 256];
         for (int color = 0; color < colorMap.length; ++color) {
             int startRed = (color & 0x00FF0000) >> 16;
@@ -54,10 +58,8 @@ public class DaltonizeGenerator extends ColorTranformGenerator {
 
             // simulate colorblindness
             Vector linRGB = new Vector(linRed, linGreen, linBlue);
-            float simGray = ColorUtilities.clip(linRed
-                    * ColorUtilities.achromatopsiaSim.v1 + linGreen
-                    * ColorUtilities.achromatopsiaSim.v2 + linBlue
-                    * ColorUtilities.achromatopsiaSim.v3);
+            float simGray = ColorUtilities.clip(linRed * sim.v1 + linGreen
+                    * sim.v2 + linBlue * sim.v3);
             Vector simRGB = new Vector(simGray, simGray, simGray);
 
             // calculate the color delta in color space, rotate it, and

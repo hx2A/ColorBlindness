@@ -4,6 +4,7 @@ import processing.core.PImage;
 import colorblind.ColorUtilities;
 import colorblind.Deficiency;
 import colorblind.generators.util.Matrix;
+import colorblind.generators.util.Vector;
 
 /**
  * Base class for all of the color transform generators.
@@ -45,7 +46,8 @@ public abstract class ColorTranformGenerator extends Generator {
         applyGammaCorrectionLUT = preComputeApplyGammaCorrectionStandardrgbLUT(MAX_ENCODED_VALUE);
     }
 
-    protected abstract int[] precalcAchromatopsiaColorMap(float amount);
+    protected abstract int[] precalcMonochromaticColorMap(Vector sim,
+            float amount);
 
     protected abstract int[] precalcDichromaticColorMap(Matrix sim, float amount);
 
@@ -59,8 +61,6 @@ public abstract class ColorTranformGenerator extends Generator {
      */
     private int[] computeColorMapLookup(float amount) {
         switch (deficiency) {
-        case ACHROMATOPSIA:
-            return precalcAchromatopsiaColorMap(amount);
         case PROTANOPIA:
             return precalcDichromaticColorMap(ColorUtilities.protanopiaSim,
                     amount);
@@ -70,6 +70,14 @@ public abstract class ColorTranformGenerator extends Generator {
         case TRITANOPIA:
             return precalcDichromaticColorMap(ColorUtilities.tritanopiaSim,
                     amount);
+        case ACHROMATOPSIA:
+            return precalcMonochromaticColorMap(
+                    ColorUtilities.achromatopsiaSim, amount);
+        case BLUE_CONE_MONOCHROMACY:
+            return precalcMonochromaticColorMap(
+                    ColorUtilities.blueConeMonochromacySim, amount);
+        case CUSTOM:
+            return precalcDichromaticColorMap(ColorUtilities.customSim, amount);
         default:
             throw new RuntimeException("ERROR: Unknown color deficiency");
         }

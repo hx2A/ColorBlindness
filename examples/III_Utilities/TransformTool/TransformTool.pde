@@ -38,7 +38,7 @@ boolean wroteOutput;
 String status;
 
 String actionNames = "Simulate, Daltonize, Daltonize and Simulate";
-String deficiencyNames = "Protanopia, Deuteranopia, Tritanopia, Achromatopsia";
+String deficiencyNames = "Protanopia, Deuteranopia, Tritanopia, Achromatopsia, Blue Cone Monochromacy";
 
 Map<Integer, String> actionNameMap;
 Map<Integer, String> deficiencyNameMap;

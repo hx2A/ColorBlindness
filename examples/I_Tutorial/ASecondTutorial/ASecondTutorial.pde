@@ -2,7 +2,7 @@
 Second ColorBlindness tutorial.
  
 In this example we are parameterizing the color deficiency to a variable. This is 
-useful if you want your sketch to change color deficiency type.
+useful if you want your sketch to change color deficiency type with a dropdown.
  
     Deficiency colorDeficiency = Deficiency.PROTANOPIA;
  
@@ -51,6 +51,8 @@ void setup() {
   colorDeficiency = Deficiency.PROTANOPIA;
   //colorDeficiency = Deficiency.DEUTERANOPIA;
   //colorDeficiency = Deficiency.TRITANOPIA;
+  //colorDeficiency = Deficiency.ACHROMATOPSIA;
+  //colorDeficiency = Deficiency.BLUE_CONE_MONOCHROMACY;
   colorBlindness.simulate(colorDeficiency).setAmount(0.8);
 
   label = createGraphics(200, 30);

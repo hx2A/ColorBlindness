@@ -12,8 +12,9 @@
  
  The pixels argument is the pixel array after your draw() method is run. What
  you do with those pixels is up to you! You don't even have to do a color
- transformation. How about distorting everything with a fish eye lens? This
- library can do that too.
+ transformation. How about distorting everything with a fish eye lens? How about
+ simulating cataracts? Or macular degeneration? This library can do those things
+ too.
  */
 
 import colorblind.ColorBlindness;

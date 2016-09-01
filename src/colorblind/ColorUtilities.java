@@ -44,6 +44,12 @@ public class ColorUtilities {
     public static Vector achromatopsiaSim = new Vector(0.212656f, 0.715158f,
             0.072186f);
 
+    public static Vector blueConeMonochromacySim = new Vector(0.01775042f,
+            0.10942995f, 0.8724724f);
+
+    public static Matrix customSim = new Matrix(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f,
+            1f);
+
     /*
      * Daltonize Matrices
      * 
@@ -169,8 +175,8 @@ public class ColorUtilities {
      *            float [0, 1]
      * @return new color that is determined by x
      */
-    public static int confusingColor(Deficiency colorBlindness, int color,
-            float x) {
+    public static int confusingDichromaticColor(Deficiency colorBlindness,
+            int color, float x) {
         Vector lms = convertPColor2LMS(color);
 
         float[] boundaries = new float[6];
@@ -264,32 +270,38 @@ public class ColorUtilities {
             return convertLMS2PColor(lms);
 
         case ACHROMATOPSIA:
-            throw new RuntimeException(
-                    "Not implemented. Use confusingAchromatopsiaColor instead.");
+        case BLUE_CONE_MONOCHROMACY:
+            throw new RuntimeException("Use confusingMonochromaticColor for "
+                    + colorBlindness.toString().toLowerCase()
+                    + " confusing colors.");
+
+        case CUSTOM:
+            throw new RuntimeException("Custom confusing colors not supported.");
 
         default:
-            throw new RuntimeException("Unknown Color Deficiency");
+            throw new RuntimeException(
+                    "Unknown Color Deficiency - please report");
         }
     }
 
     public static int confusingProtanopiaColor(int color, float x) {
-        return confusingColor(Deficiency.PROTANOPIA, color, x);
+        return confusingDichromaticColor(Deficiency.PROTANOPIA, color, x);
     }
 
     public static int confusingDeuteranopiaColor(int color, float x) {
-        return confusingColor(Deficiency.DEUTERANOPIA, color, x);
+        return confusingDichromaticColor(Deficiency.DEUTERANOPIA, color, x);
     }
 
     public static int confusingTritanopiaColor(int color, float x) {
-        return confusingColor(Deficiency.TRITANOPIA, color, x);
+        return confusingDichromaticColor(Deficiency.TRITANOPIA, color, x);
     }
 
     /**
-     * Intentionally generate colors that would be confusing to an achromatope
-     * person.
+     * Intentionally generate colors that would be confusing to someone with
+     * monochromatic vision.
      * 
      * If a plot of all possible colors were a 3D space, there would be planes
-     * of colors in the 3D space that would look identical to a colorblind
+     * of colors in the 3D space that would look identical to a monochromat
      * person. This code attempts to pick multiple colors on those planes.
      * 
      * @param color
@@ -300,25 +312,43 @@ public class ColorUtilities {
      *            float [0, 1]
      * @return new color that is determined by x1 and x2
      */
-    public static int confusingAchromatopsiaColor(int color, float x1, float x2) {
+    public static int confusingMonochromaticColor(Deficiency colorBlindness,
+            int color, float x1, float x2) {
+        Vector sim;
+        switch (colorBlindness) {
+        case ACHROMATOPSIA:
+            sim = achromatopsiaSim;
+            break;
+        case BLUE_CONE_MONOCHROMACY:
+            sim = blueConeMonochromacySim;
+            break;
+        case PROTANOPIA:
+        case DEUTERANOPIA:
+        case TRITANOPIA:
+            throw new RuntimeException("Use confusingDichromaticColor for "
+                    + colorBlindness.toString().toLowerCase()
+                    + " confusing colors.");
+        case CUSTOM:
+            throw new RuntimeException("Custom confusing colors not supported.");
+
+        default:
+            throw new RuntimeException(
+                    "Unknown Color Deficiency - please report");
+        }
+
         Vector rgb = convertPColor2LinearRGB(color);
 
-        float Z = rgb.dot(achromatopsiaSim);
+        float Z = rgb.dot(sim);
         Vector rgb2 = new Vector();
 
         float minR2 = 0;
-        float maxR2 = Math.min(1, Z / achromatopsiaSim.v1);
+        float maxR2 = Math.min(1, Z / sim.v1);
         rgb2.v1 = minR2 + clip(x1) * (maxR2 - minR2);
 
-        float minG2 = Math.max(0,
-                (Z - achromatopsiaSim.v1 * rgb2.v1 - achromatopsiaSim.v3 * 1)
-                        / achromatopsiaSim.v2);
-        float maxG2 = Math.min(1, (Z - achromatopsiaSim.v1 * rgb2.v1)
-                / achromatopsiaSim.v2);
+        float minG2 = Math.max(0, (Z - sim.v1 * rgb2.v1 - sim.v3 * 1) / sim.v2);
+        float maxG2 = Math.min(1, (Z - sim.v1 * rgb2.v1) / sim.v2);
         rgb2.v2 = minG2 + clip(x2) * (maxG2 - minG2);
-        rgb2.v3 = (Z - achromatopsiaSim.v1 * rgb2.v1 - achromatopsiaSim.v2
-                * rgb2.v2)
-                / achromatopsiaSim.v3;
+        rgb2.v3 = (Z - sim.v1 * rgb2.v1 - sim.v2 * rgb2.v2) / sim.v3;
 
         return convertLinearRGB2PColor(rgb2);
     }
