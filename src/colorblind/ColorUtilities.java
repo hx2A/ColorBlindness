@@ -169,6 +169,8 @@ public class ColorUtilities {
      * colors in the 3D space that would look identical to a colorblind person.
      * This code attempts to pick multiple colors along those lines.
      * 
+     * @param colorBlindness
+     *            color deficiency
      * @param color
      *            initial color
      * @param x
@@ -177,111 +179,40 @@ public class ColorUtilities {
      */
     public static int confusingDichromaticColor(Deficiency colorBlindness,
             int color, float x) {
+        if ((color & 0xFFFFFF) == 0)
+            return color;
+
         Vector lms = convertPColor2LMS(color);
 
-        float[] boundaries = new float[6];
-
+        int index = 0;
         switch (colorBlindness) {
         case PROTANOPIA:
-            boundaries[0] = (0 - lms2rgb.r1c2 * lms.v2 - lms2rgb.r1c3 * lms.v3)
-                    / lms2rgb.r1c1;
-            boundaries[1] = (0 - lms2rgb.r2c2 * lms.v2 - lms2rgb.r2c3 * lms.v3)
-                    / lms2rgb.r2c1;
-            boundaries[2] = (0 - lms2rgb.r3c2 * lms.v2 - lms2rgb.r3c3 * lms.v3)
-                    / lms2rgb.r3c1;
-
-            boundaries[3] = (1 - lms2rgb.r1c2 * lms.v2 - lms2rgb.r1c3 * lms.v3)
-                    / lms2rgb.r1c1;
-            boundaries[4] = (1 - lms2rgb.r2c2 * lms.v2 - lms2rgb.r2c3 * lms.v3)
-                    / lms2rgb.r2c1;
-            boundaries[5] = (1 - lms2rgb.r3c2 * lms.v2 - lms2rgb.r3c3 * lms.v3)
-                    / lms2rgb.r3c1;
-
-            float minL = Float.MIN_VALUE;
-            float maxL = Float.MAX_VALUE;
-
-            for (float boundary : boundaries) {
-                if (boundary < lms.v1)
-                    minL = Math.max(minL, boundary);
-                else
-                    maxL = Math.min(maxL, boundary);
-            }
-
-            lms.v1 = minL + (clip(x) * (maxL - minL));
-
-            return convertLMS2PColor(lms);
-
+            index = 1;
+            break;
         case DEUTERANOPIA:
-            boundaries[0] = (0 - lms2rgb.r1c1 * lms.v1 - lms2rgb.r1c3 * lms.v3)
-                    / lms2rgb.r1c2;
-            boundaries[1] = (0 - lms2rgb.r2c1 * lms.v1 - lms2rgb.r2c3 * lms.v3)
-                    / lms2rgb.r2c2;
-            boundaries[2] = (0 - lms2rgb.r3c1 * lms.v1 - lms2rgb.r3c3 * lms.v3)
-                    / lms2rgb.r3c2;
-
-            boundaries[3] = (1 - lms2rgb.r1c1 * lms.v1 - lms2rgb.r1c3 * lms.v3)
-                    / lms2rgb.r1c2;
-            boundaries[4] = (1 - lms2rgb.r2c1 * lms.v1 - lms2rgb.r2c3 * lms.v3)
-                    / lms2rgb.r2c2;
-            boundaries[5] = (1 - lms2rgb.r3c1 * lms.v1 - lms2rgb.r3c3 * lms.v3)
-                    / lms2rgb.r3c2;
-
-            float minM = Float.MIN_VALUE;
-            float maxM = Float.MAX_VALUE;
-
-            for (float boundary : boundaries) {
-                if (boundary < lms.v2)
-                    minM = Math.max(minM, boundary);
-                else
-                    maxM = Math.min(maxM, boundary);
-            }
-
-            lms.v2 = minM + (clip(x) * (maxM - minM));
-
-            return convertLMS2PColor(lms);
-
+            index = 2;
+            break;
         case TRITANOPIA:
-            boundaries[0] = (0 - lms2rgb.r1c1 * lms.v1 - lms2rgb.r1c2 * lms.v2)
-                    / lms2rgb.r1c3;
-            boundaries[1] = (0 - lms2rgb.r2c1 * lms.v1 - lms2rgb.r2c2 * lms.v2)
-                    / lms2rgb.r2c3;
-            boundaries[2] = (0 - lms2rgb.r3c1 * lms.v1 - lms2rgb.r3c2 * lms.v2)
-                    / lms2rgb.r3c3;
-
-            boundaries[3] = (1 - lms2rgb.r1c1 * lms.v1 - lms2rgb.r1c2 * lms.v2)
-                    / lms2rgb.r1c3;
-            boundaries[4] = (1 - lms2rgb.r2c1 * lms.v1 - lms2rgb.r2c2 * lms.v2)
-                    / lms2rgb.r2c3;
-            boundaries[5] = (1 - lms2rgb.r3c1 * lms.v1 - lms2rgb.r3c2 * lms.v2)
-                    / lms2rgb.r3c3;
-
-            float minS = Float.MIN_VALUE;
-            float maxS = Float.MAX_VALUE;
-
-            for (float boundary : boundaries) {
-                if (boundary < lms.v3)
-                    minS = Math.max(minS, boundary);
-                else
-                    maxS = Math.min(maxS, boundary);
-            }
-
-            lms.v3 = minS + (clip(x) * (maxS - minS));
-
-            return convertLMS2PColor(lms);
-
+            index = 3;
+            break;
         case ACHROMATOPSIA:
         case BLUE_CONE_MONOCHROMACY:
             throw new RuntimeException("Use confusingMonochromaticColor for "
                     + colorBlindness.toString().toLowerCase()
                     + " confusing colors.");
-
         case CUSTOM:
             throw new RuntimeException("Custom confusing colors not supported.");
-
         default:
             throw new RuntimeException(
                     "Unknown Color Deficiency - please report");
         }
+
+        float lower = lmsFeasibleBisectionSearch(lms, index, -1);
+        float upper = lmsFeasibleBisectionSearch(lms, index, 1);
+
+        lms.set(index, lower + (clip(x) * (upper - lower)));
+
+        return convertLMS2PColor(lms);
     }
 
     public static int confusingProtanopiaColor(int color, float x) {
@@ -294,6 +225,70 @@ public class ColorUtilities {
 
     public static int confusingTritanopiaColor(int color, float x) {
         return confusingDichromaticColor(Deficiency.TRITANOPIA, color, x);
+    }
+
+    /**
+     * Search the LMS color space for the feasibility edge.
+     * 
+     * If I convert a Processing color to LMS color space, how far can I adjust
+     * one of the 3 values until it can no longer be converted back to a valid
+     * Processing color? This function answers that question.
+     * 
+     * Using a bisection search, find the min or max value of one value in the
+     * lms vector that is on the edge of the range that converts back to a
+     * feasible vector in linear RGB space.
+     * 
+     * @param lms
+     *            Vector of color in LMS space
+     * @param index
+     *            index into lms vector to change
+     * @param direction
+     *            1 or -1 to search in bigger or smaller direction
+     * @return feasible value on edge of feasibility
+     */
+    public static float lmsFeasibleBisectionSearch(Vector lms, int index,
+            int direction) {
+        if (!(direction == 1 || direction == -1)) {
+            throw new RuntimeException("direction must be 1 or -1");
+        }
+
+        Vector lmsLower = new Vector(lms);
+        Vector lmsUpper = new Vector(lms); // outside feasible LMS region
+        lmsUpper.set(index, Math.signum(direction) * 10);
+        Vector lmsMid = new Vector(lms);
+        lmsMid.set(index, (lmsLower.get(index) + lmsUpper.get(index)) / 2);
+
+        float epsilon = 0.00001f;
+        while (Math.abs(lmsUpper.get(index) - lmsLower.get(index)) > epsilon) {
+            Vector test = convertLMS2LinearRGB(lmsMid);
+            float max = Math.max(Math.max(test.v1, test.v2), test.v3);
+            float min = Math.min(Math.min(test.v1, test.v2), test.v3);
+
+            if (max > 1f || min < 0f) {
+                // outside feasible region
+                lmsMid.set(index, lmsMid.get(index) - epsilon * direction);
+                test = convertLMS2LinearRGB(lmsMid);
+                max = Math.max(Math.max(test.v1, test.v2), test.v3);
+                min = Math.min(Math.min(test.v1, test.v2), test.v3);
+
+                if (max > 1f || min < 0f) {
+                    // still outside feasible region, so not near boundary
+                    lmsUpper = lmsMid;
+                    lmsMid.set(index,
+                            (lmsLower.get(index) + lmsUpper.get(index)) / 2);
+                } else {
+                    // inside feasible region, so near boundary
+                    return lmsMid.get(index);
+                }
+            } else {
+                // inside feasible region
+                lmsLower = lmsMid;
+                lmsMid.set(index,
+                        (lmsLower.get(index) + lmsUpper.get(index)) / 2);
+            }
+        }
+
+        return lmsMid.get(index);
     }
 
     /**

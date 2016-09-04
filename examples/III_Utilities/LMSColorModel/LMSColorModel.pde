@@ -1,23 +1,28 @@
 /*
 Simple tool for exploring the the LMS color model. Adjust the the RGB
-color bars to see how the color stimulates the the color receptors, or
-cones, in the human eye.
-
-Dichromat color blind people lack one of the L, M, or S color cones.
-
-Protanopia - lack L cones
-Deuteranopia - lack M cones
-Tritanopia - lack S cones
-
-With only 2 kinds of cones, dichromats are unable to disambiguate colors
-that would maintain the same level of stimulation to the cones they do 
-have but different levels of stimuation to the cone that they are missing.
-
-Adjust the LMS stimulations using the buttons on the lower right side
-of the sketch. Note that some combinations of L, M, and S stimulations
-are not feasible because of the overlap of the cones' spectral absorption
-functions. This sketch will keep you from making that mistake.
-*/
+ color bars to see how the color stimulates the the color receptors, or
+ cones, in the human eye.
+ 
+ Dichromat color blind people lack one of the L, M, or S color cones.
+ 
+ Protanopia - lack L cones
+ Deuteranopia - lack M cones
+ Tritanopia - lack S cones
+ 
+ With only 2 kinds of cones, dichromats are unable to disambiguate colors
+ that would maintain the same level of stimulation to the cones they do 
+ have but different levels of stimuation to the cone that they are missing.
+ 
+ Adjust the LMS stimulations using the buttons on the lower right side
+ of the sketch. Note that some combinations of L, M, and S stimulations
+ are not feasible because of the overlap of the cones' spectral absorption
+ functions. This sketch will keep you from making that mistake.
+ 
+ If you set the color to pure white (255, 255, 255), you will not be able
+ to use the LMS up and down buttons to adjust the color. This is due to
+ tedious numerical issues that are not worth explaining. Change the color
+ to something else, such as (253, 253, 253), and proceed.
+ */
 
 import colorblind.ColorUtilities;
 import colorblind.generators.util.Matrix;
@@ -102,25 +107,25 @@ void draw() {
   // S
   fill(0xFF0000FF);
   rect(lmsOriginX, lmsOriginY + lmsBarHeight * (1 - lms.v3), lmsOriginX
-        + lmsBarWidth, lmsOriginY + lmsBarHeight);
+    + lmsBarWidth, lmsOriginY + lmsBarHeight);
   // M
   fill(0xFF00FF00);
-  rect(lmsOriginX + lmsBarWidth,
-        lmsOriginY + lmsBarHeight * (1 - lms.v2), lmsOriginX + 2
-                * lmsBarWidth, lmsOriginY + lmsBarHeight);
+  rect(lmsOriginX + lmsBarWidth, 
+    lmsOriginY + lmsBarHeight * (1 - lms.v2), lmsOriginX + 2
+    * lmsBarWidth, lmsOriginY + lmsBarHeight);
   // L
   fill(0xFFFF0000);
   rect(lmsOriginX + 2 * lmsBarWidth, lmsOriginY + lmsBarHeight
-        * (1 - lms.v1), lmsOriginX + 3 * lmsBarWidth, lmsOriginY
-        + lmsBarHeight);
+    * (1 - lms.v1), lmsOriginX + 3 * lmsBarWidth, lmsOriginY
+    + lmsBarHeight);
 
   rectMode(CORNER);
   noFill();
   stroke(128);
   rect(lmsOriginX, lmsOriginY, lmsBarWidth, lmsBarHeight);
   rect(lmsOriginX + lmsBarWidth, lmsOriginY, lmsBarWidth, lmsBarHeight);
-  rect(lmsOriginX + 2 * lmsBarWidth, lmsOriginY, lmsBarWidth,
-        lmsBarHeight);
+  rect(lmsOriginX + 2 * lmsBarWidth, lmsOriginY, lmsBarWidth, 
+    lmsBarHeight);
 }
 
 void controlEvent(ControlEvent event) {
@@ -163,8 +168,8 @@ void updateRGBvalues(String name, float value) {
 }
 
 void updateLMSvalues(String name, float magnitude) {
-  lms = adjustLMS(name.charAt(0), lms,
-        (name.charAt(1) == 'U') ? magnitude : -magnitude);
+  lms = adjustLMS(name.charAt(0), lms, 
+    (name.charAt(1) == 'U') ? magnitude : -magnitude);
 
   swatchColor = ColorUtilities.convertLMS2PColor(lms);
   redSliderVal = (swatchColor & 0x00FF0000) >> 16;
@@ -179,102 +184,27 @@ void updateLMSvalues(String name, float magnitude) {
 }
 
 Vector adjustLMS(char channel, Vector lms, float amount) {
-  Matrix lms2rgb = ColorUtilities.lms2rgb;
-
-  float[] boundaries = new float[6];
-
+  int index = 0;
   switch (channel) {
   case 'L':
-    boundaries[0] = (0 - lms2rgb.r1c2 * lms.v2 - lms2rgb.r1c3 * lms.v3)
-        / lms2rgb.r1c1;
-    boundaries[1] = (0 - lms2rgb.r2c2 * lms.v2 - lms2rgb.r2c3 * lms.v3)
-        / lms2rgb.r2c1;
-    boundaries[2] = (0 - lms2rgb.r3c2 * lms.v2 - lms2rgb.r3c3 * lms.v3)
-        / lms2rgb.r3c1;
-
-    boundaries[3] = (1 - lms2rgb.r1c2 * lms.v2 - lms2rgb.r1c3 * lms.v3)
-        / lms2rgb.r1c1;
-    boundaries[4] = (1 - lms2rgb.r2c2 * lms.v2 - lms2rgb.r2c3 * lms.v3)
-        / lms2rgb.r2c1;
-    boundaries[5] = (1 - lms2rgb.r3c2 * lms.v2 - lms2rgb.r3c3 * lms.v3)
-        / lms2rgb.r3c1;
-
-    float minL = Float.MIN_VALUE;
-    float maxL = Float.MAX_VALUE;
-
-    for (float boundary : boundaries) {
-      if (boundary < lms.v1)
-        minL = Math.max(minL, boundary);
-      else
-        maxL = Math.min(maxL, boundary);
-    }
-    lms.v1 = ColorUtilities.clip(lms.v1 + amount, minL + 0.0001f,
-        maxL - 0.0001f);
-
-    return lms;
-
+    index = 1;
+    break;
   case 'M':
-    boundaries[0] = (0 - lms2rgb.r1c1 * lms.v1 - lms2rgb.r1c3 * lms.v3)
-        / lms2rgb.r1c2;
-    boundaries[1] = (0 - lms2rgb.r2c1 * lms.v1 - lms2rgb.r2c3 * lms.v3)
-        / lms2rgb.r2c2;
-    boundaries[2] = (0 - lms2rgb.r3c1 * lms.v1 - lms2rgb.r3c3 * lms.v3)
-        / lms2rgb.r3c2;
-
-    boundaries[3] = (1 - lms2rgb.r1c1 * lms.v1 - lms2rgb.r1c3 * lms.v3)
-        / lms2rgb.r1c2;
-    boundaries[4] = (1 - lms2rgb.r2c1 * lms.v1 - lms2rgb.r2c3 * lms.v3)
-        / lms2rgb.r2c2;
-    boundaries[5] = (1 - lms2rgb.r3c1 * lms.v1 - lms2rgb.r3c3 * lms.v3)
-        / lms2rgb.r3c2;
-
-    float minM = Float.MIN_VALUE;
-    float maxM = Float.MAX_VALUE;
-
-    for (float boundary : boundaries) {
-      if (boundary < lms.v2)
-        minM = Math.max(minM, boundary);
-      else
-        maxM = Math.min(maxM, boundary);
-    }
-
-    lms.v2 = ColorUtilities.clip(lms.v2 + amount, minM + 0.0001f,
-        maxM - 0.0001f);
-
-    return lms;
-
+    index = 2;
+    break;
   case 'S':
-    boundaries[0] = (0 - lms2rgb.r1c1 * lms.v1 - lms2rgb.r1c2 * lms.v2)
-        / lms2rgb.r1c3;
-    boundaries[1] = (0 - lms2rgb.r2c1 * lms.v1 - lms2rgb.r2c2 * lms.v2)
-        / lms2rgb.r2c3;
-    boundaries[2] = (0 - lms2rgb.r3c1 * lms.v1 - lms2rgb.r3c2 * lms.v2)
-        / lms2rgb.r3c3;
-
-    boundaries[3] = (1 - lms2rgb.r1c1 * lms.v1 - lms2rgb.r1c2 * lms.v2)
-        / lms2rgb.r1c3;
-    boundaries[4] = (1 - lms2rgb.r2c1 * lms.v1 - lms2rgb.r2c2 * lms.v2)
-        / lms2rgb.r2c3;
-    boundaries[5] = (1 - lms2rgb.r3c1 * lms.v1 - lms2rgb.r3c2 * lms.v2)
-        / lms2rgb.r3c3;
-
-    float minS = Float.MIN_VALUE;
-    float maxS = Float.MAX_VALUE;
-
-    for (float boundary : boundaries) {
-      if (boundary < lms.v3)
-        minS = Math.max(minS, boundary);
-      else
-        maxS = Math.min(maxS, boundary);
-    }
-
-    lms.v3 = ColorUtilities.clip(lms.v3 + amount, minS + 0.0001f, maxS - 0.0001f);
-
-    return lms;
-
+    index = 3;
+    break;
   default:
-    throw new RuntimeException("Unknown Color Deficiency");
-  }
+    throw new RuntimeException("Unknown Channel");
+  }  
+
+  float lower = ColorUtilities.lmsFeasibleBisectionSearch(lms, index, -1);
+  float upper = ColorUtilities.lmsFeasibleBisectionSearch(lms, index, 1);
+
+  lms.set(index, constrain(lms.get(index) + amount, lower, upper));
+
+  return lms;
 }
 
 Slider addSlider(String variable, String caption, float y, int min, int max, int sliderColor) {
