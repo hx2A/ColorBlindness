@@ -44,8 +44,8 @@ public class ColorUtilities {
     public static Vector achromatopsiaSim = new Vector(0.212656f, 0.715158f,
             0.072186f);
 
-    public static Vector blueConeMonochromacySim = new Vector(0.01775042f,
-            0.10942995f, 0.8724724f);
+    public static Vector blueConeMonochromacySim = new Vector(0.01775f,
+            0.10945f, 0.87262f);
 
     public static Matrix customSim = new Matrix(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f,
             1f);
