@@ -24,8 +24,6 @@ tutorial sketches to learn more.
 
 import colorblind.ColorBlindness;
 
-PGraphics label;
-
 float rot = 75f;
 float rotX = rot * 0.5f;
 float rotY = rot * 0.1f;
@@ -46,14 +44,6 @@ void setup() {
   //colorBlindness.daltonizeTritanopia();
   //colorBlindness.daltonizeAchromatopsia();
   //colorBlindness.daltonizeBlueConeMonochromacy();
-
-  label = createGraphics(150, 20);
-  label.beginDraw();
-  label.textAlign(LEFT, TOP);
-  label.fill(0xFFFF0000);
-  label.textSize(12);
-  label.text("Color Blindness Example", 0, 0);
-  label.endDraw();
 }
 
 void draw() {
