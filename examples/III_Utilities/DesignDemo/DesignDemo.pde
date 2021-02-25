@@ -81,7 +81,7 @@ void setup() {
   // the same as colorHover.
   // the third parameter can be any float in the range [0, 1]. Returned
   // colors lie on the colorHover's confusion line.
-  colorOff = ColorUtilities.confusingColor(deficiency, colorHover, 0.2);
+  colorOff = ColorUtilities.confusingDichromaticColor(deficiency, colorHover, 0.2);
 }
 
 void draw() {
