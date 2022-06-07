@@ -8,7 +8,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.event.KeyEvent;
 import colorblind.generators.ColorDeficiencySimulator;
-import colorblind.generators.ColorTranformGenerator;
+import colorblind.generators.ColorTransformGenerator;
 import colorblind.generators.DaltonizeGenerator;
 import colorblind.generators.Generator;
 import colorblind.generators.RegularRenderer;
@@ -74,8 +74,8 @@ public class ColorBlindness implements PConstants {
     /*
      * User Settings
      */
-    public ColorTranformGenerator simulate(Deficiency colorBlindness) {
-        ColorTranformGenerator generator = ColorDeficiencySimulator
+    public ColorTransformGenerator simulate(Deficiency colorBlindness) {
+        ColorTransformGenerator generator = ColorDeficiencySimulator
                 .createSimulator(colorBlindness);
 
         setGenerator(generator);
@@ -83,28 +83,28 @@ public class ColorBlindness implements PConstants {
         return generator;
     }
 
-    public ColorTranformGenerator simulateProtanopia() {
+    public ColorTransformGenerator simulateProtanopia() {
         return simulate(Deficiency.PROTANOPIA);
     }
 
-    public ColorTranformGenerator simulateDeuteranopia() {
+    public ColorTransformGenerator simulateDeuteranopia() {
         return simulate(Deficiency.DEUTERANOPIA);
     }
 
-    public ColorTranformGenerator simulateTritanopia() {
+    public ColorTransformGenerator simulateTritanopia() {
         return simulate(Deficiency.TRITANOPIA);
     }
 
-    public ColorTranformGenerator simulateAchromatopsia() {
+    public ColorTransformGenerator simulateAchromatopsia() {
         return simulate(Deficiency.ACHROMATOPSIA);
     }
 
-    public ColorTranformGenerator simulateBlueConeMonochromacy() {
+    public ColorTransformGenerator simulateBlueConeMonochromacy() {
         return simulate(Deficiency.BLUE_CONE_MONOCHROMACY);
     }
 
-    public ColorTranformGenerator daltonize(Deficiency colorBlindness) {
-        ColorTranformGenerator generator = DaltonizeGenerator
+    public ColorTransformGenerator daltonize(Deficiency colorBlindness) {
+        ColorTransformGenerator generator = DaltonizeGenerator
                 .createDaltonizer(colorBlindness);
 
         setGenerator(generator);
@@ -112,23 +112,23 @@ public class ColorBlindness implements PConstants {
         return generator;
     }
 
-    public ColorTranformGenerator daltonizeProtanopia() {
+    public ColorTransformGenerator daltonizeProtanopia() {
         return daltonize(Deficiency.PROTANOPIA);
     }
 
-    public ColorTranformGenerator daltonizeDeuteranopia() {
+    public ColorTransformGenerator daltonizeDeuteranopia() {
         return daltonize(Deficiency.DEUTERANOPIA);
     }
 
-    public ColorTranformGenerator daltonizeTritanopia() {
+    public ColorTransformGenerator daltonizeTritanopia() {
         return daltonize(Deficiency.TRITANOPIA);
     }
 
-    public ColorTranformGenerator daltonizeAchromatopsia() {
+    public ColorTransformGenerator daltonizeAchromatopsia() {
         return daltonize(Deficiency.ACHROMATOPSIA);
     }
 
-    public ColorTranformGenerator daltonizeBlueConeMonochromacy() {
+    public ColorTransformGenerator daltonizeBlueConeMonochromacy() {
         return daltonize(Deficiency.BLUE_CONE_MONOCHROMACY);
     }
 

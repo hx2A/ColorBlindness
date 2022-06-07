@@ -19,7 +19,7 @@ import colorblind.generators.util.Vector;
  *
  */
 
-public class DaltonizeGenerator extends ColorTranformGenerator {
+public class DaltonizeGenerator extends ColorTransformGenerator {
 
     public DaltonizeGenerator(Deficiency colorBlindness) {
         super(colorBlindness);

@@ -34,7 +34,7 @@ import controlP5.Slider;
 
 import colorblind.ColorBlindness;
 import colorblind.Deficiency;
-import colorblind.generators.ColorTranformGenerator;
+import colorblind.generators.ColorTransformGenerator;
 
 enum Action {
   SIMULATE, DALTONIZE, DALTONIZE_AND_SIMULATE
@@ -42,8 +42,8 @@ enum Action {
 
 ControlP5 cp5;
 ColorBlindness colorBlindness;
-ColorTranformGenerator currentSimulator;
-ColorTranformGenerator currentDaltonizer;
+ColorTransformGenerator currentSimulator;
+ColorTransformGenerator currentDaltonizer;
 
 // ControlP5 variables
 Action action;

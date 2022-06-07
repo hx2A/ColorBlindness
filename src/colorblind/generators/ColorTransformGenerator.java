@@ -15,7 +15,7 @@ import colorblind.generators.util.Vector;
  * @author James Schmitz
  *
  */
-public abstract class ColorTranformGenerator extends Generator {
+public abstract class ColorTransformGenerator extends Generator {
 
     protected Deficiency deficiency;
 
@@ -36,7 +36,7 @@ public abstract class ColorTranformGenerator extends Generator {
      * 
      * @param colorBlindness
      */
-    public ColorTranformGenerator(Deficiency colorBlindness) {
+    public ColorTransformGenerator(Deficiency colorBlindness) {
         this.deficiency = colorBlindness;
         this.amount = 1;
         this.amountComplement = 0;
@@ -92,7 +92,7 @@ public abstract class ColorTranformGenerator extends Generator {
      *            : in range [0, 1]
      * @return
      */
-    public ColorTranformGenerator setAmount(float amount) {
+    public ColorTransformGenerator setAmount(float amount) {
         if (dynamicAmount == false && colorMap != null) {
             System.err
                     .println("Please don't change amount without also calling setDynamicAmount()."
@@ -112,7 +112,7 @@ public abstract class ColorTranformGenerator extends Generator {
      * 
      * @return
      */
-    public ColorTranformGenerator setDynamicAmount() {
+    public ColorTransformGenerator setDynamicAmount() {
         // only null out the colorMap if it had been calculated with an
         // amount less than 1.
         if (dynamicAmount == false && colorMap != null && amount < 1)

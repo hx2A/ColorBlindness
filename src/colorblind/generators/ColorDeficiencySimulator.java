@@ -19,7 +19,7 @@ import colorblind.generators.util.Vector;
  *
  */
 
-public class ColorDeficiencySimulator extends ColorTranformGenerator {
+public class ColorDeficiencySimulator extends ColorTransformGenerator {
 
     public ColorDeficiencySimulator(Deficiency colorBlindness) {
         super(colorBlindness);
