@@ -1,5 +1,4 @@
-ColorBlindness - Color Blindness Library for [Processing](http://processing.org)
-=============================================================
+# ColorBlindness - Color Blindness Library for [Processing](http://processing.org)
 
 [Processing](http://processing.org) is an open source Java application used by students and artists to explore creative expression of technology. I very much enjoy creative coding and I often use Processing to implement my ideas.
 
@@ -15,3 +14,22 @@ My goals for this library are:
 My hope is for this library to help educate the Processing community about color blindness and to create new opportunities for artistic expression.
 
 Refer to the [documentation](http://ixora.io/projects/colorblindness/) to learn more.
+
+## Contributing
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
+dual licensed as below, without any additional terms or conditions.
+
+## License
+
+&copy; \<year\> \<authors\> \[\<email\>].
+
+This project is licensed under either of
+
+* [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) ([`LICENSE-APACHE`](LICENSE-APACHE))
+* [MIT license](https://opensource.org/licenses/MIT) ([`LICENSE-MIT`](LICENSE-MIT))
+
+at your option.
+
+The [SPDX](https://spdx.dev) license identifier for this project is `MIT OR Apache-2.0`.
