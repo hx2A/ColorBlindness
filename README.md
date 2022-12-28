@@ -23,7 +23,9 @@ dual licensed as below, without any additional terms or conditions.
 
 ## License
 
-&copy; \<year\> \<authors\> \[\<email\>].
+* Copyright (c) 2012-2023 Jim Schmitz [jim@ixora.io]
+* Copyright (c) 2011-2015 Elie Zananiri
+* Copyright (c) 2008-2011 Andreas Schlegel
 
 This project is licensed under either of
 
