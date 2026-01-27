@@ -81,7 +81,7 @@ public void setup() {
   createControls();
   setCurrentGenerators();
 
-  print("Note: for achromatopsia and blue cone monochromacy, daltonization not defined.");
+  println("Note: for achromatopsia and blue cone monochromacy, daltonization not defined.");
 }
 
 void draw() {
@@ -132,7 +132,7 @@ void setCurrentGenerators() {
 
     if (deficiency == Deficiency.ACHROMATOPSIA ||
       deficiency == Deficiency.BLUE_CONE_MONOCHROMACY) {
-      print("Note: for achromatopsia and blue cone monochromacy, daltonization not defined.");
+      println("Note: for achromatopsia and blue cone monochromacy, daltonization not defined.");
       currentDaltonizer = null;
     } else {
       currentDaltonizer = colorBlindness.daltonize(deficiency)
