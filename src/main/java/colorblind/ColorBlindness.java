@@ -49,7 +49,7 @@ public class ColorBlindness implements PConstants {
         parent.registerMethod("keyEvent", this);
 
         avgGeneratorTimeMillis = 1;
-        pixelCount = parent.width * parent.height;
+        pixelCount = parent.width * parent.height * parent.pixelDensity * parent.pixelDensity;
         cachedPixels = null;
         active = true;
 
