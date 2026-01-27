@@ -48,7 +48,7 @@ val libName = "ColorBlindness"
 // It's often written in reverse domain name notation.
 // For example, if your website is "myDomain.com", your group ID would be "com.myDomain".
 // Replace "com.myDomain" with your own domain or organization name.
-group = "com.myDomain"
+group = "colorblind"
 
 // The location of your sketchbook folder. The sketchbook folder holds your installed
 // libraries, tools, and modes. It is needed if you:
