@@ -46,42 +46,15 @@ public abstract class ColorTransformGenerator extends Generator {
         applyGammaCorrectionLUT = preComputeApplyGammaCorrectionStandardrgbLUT(MAX_ENCODED_VALUE);
     }
 
-    protected abstract int[] precalcMonochromaticColorMap(Vector sim,
-            float amount);
-
-    protected abstract int[] precalcDichromaticColorMap(Matrix sim, float amount);
-
     /**
      * This should only be called once, and lazily, when the table is first
      * used.
      * 
      * @param amount
-     *            number in range [0, 1]
+     *               number in range [0, 1]
      * @return precomputed lookup table.
      */
-    private int[] computeColorMapLookup(float amount) {
-        switch (deficiency) {
-        case PROTANOPIA:
-            return precalcDichromaticColorMap(ColorUtilities.protanopiaSim,
-                    amount);
-        case DEUTERANOPIA:
-            return precalcDichromaticColorMap(ColorUtilities.deuteranopiaSim,
-                    amount);
-        case TRITANOPIA:
-            return precalcDichromaticColorMap(ColorUtilities.tritanopiaSim,
-                    amount);
-        case ACHROMATOPSIA:
-            return precalcMonochromaticColorMap(
-                    ColorUtilities.achromatopsiaSim, amount);
-        case BLUE_CONE_MONOCHROMACY:
-            return precalcMonochromaticColorMap(
-                    ColorUtilities.blueConeMonochromacySim, amount);
-        case CUSTOM:
-            return precalcDichromaticColorMap(ColorUtilities.customSim, amount);
-        default:
-            throw new RuntimeException("ERROR: Unknown color deficiency");
-        }
-    }
+    protected abstract int[] computeColorMapLookup(float amount);
 
     /**
      * Set % of colorblindness. This defaults to 100%.
@@ -89,7 +62,7 @@ public abstract class ColorTransformGenerator extends Generator {
      * Better to call setDynamicAmount() before calling this.
      * 
      * @param amount
-     *            : in range [0, 1]
+     *               : in range [0, 1]
      * @return
      */
     public ColorTransformGenerator setAmount(float amount) {
@@ -195,7 +168,7 @@ public abstract class ColorTransformGenerator extends Generator {
      * color.
      * 
      * @param pixels
-     *            Processing pixel array.
+     *               Processing pixel array.
      */
     public void transformPixels(int[] pixels) {
         verifyLookupTables();

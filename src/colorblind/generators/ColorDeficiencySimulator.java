@@ -28,21 +28,40 @@ public class ColorDeficiencySimulator extends ColorTransformGenerator {
     public static ColorDeficiencySimulator createSimulator(
             Deficiency colorBlindness) {
         switch (colorBlindness) {
-        case PROTANOPIA:
-            return new ColorDeficiencySimulator(Deficiency.PROTANOPIA);
-        case DEUTERANOPIA:
-            return new ColorDeficiencySimulator(Deficiency.DEUTERANOPIA);
-        case TRITANOPIA:
-            return new ColorDeficiencySimulator(Deficiency.TRITANOPIA);
-        case ACHROMATOPSIA:
-            return new ColorDeficiencySimulator(Deficiency.ACHROMATOPSIA);
-        case BLUE_CONE_MONOCHROMACY:
-            return new ColorDeficiencySimulator(
-                    Deficiency.BLUE_CONE_MONOCHROMACY);
-        case CUSTOM:
-            return new ColorDeficiencySimulator(Deficiency.CUSTOM);
-        default:
-            throw new RuntimeException("Unknown color blindness deficiency");
+            case PROTANOPIA:
+                return new ColorDeficiencySimulator(Deficiency.PROTANOPIA);
+            case DEUTERANOPIA:
+                return new ColorDeficiencySimulator(Deficiency.DEUTERANOPIA);
+            case TRITANOPIA:
+                return new ColorDeficiencySimulator(Deficiency.TRITANOPIA);
+            case ACHROMATOPSIA:
+                return new ColorDeficiencySimulator(Deficiency.ACHROMATOPSIA);
+            case BLUE_CONE_MONOCHROMACY:
+                return new ColorDeficiencySimulator(
+                        Deficiency.BLUE_CONE_MONOCHROMACY);
+            case CUSTOM:
+                return new ColorDeficiencySimulator(Deficiency.CUSTOM);
+            default:
+                throw new RuntimeException("Unknown color blindness deficiency");
+        }
+    }
+
+    protected int[] computeColorMapLookup(float amount) {
+        switch (deficiency) {
+            case PROTANOPIA:
+                return precalcDichromaticColorMap(ColorUtilities.protanopiaSim, amount);
+            case DEUTERANOPIA:
+                return precalcDichromaticColorMap(ColorUtilities.deuteranopiaSim, amount);
+            case TRITANOPIA:
+                return precalcDichromaticColorMap(ColorUtilities.tritanopiaSim, amount);
+            case ACHROMATOPSIA:
+                return precalcMonochromaticColorMap(ColorUtilities.achromatopsiaSim, amount);
+            case BLUE_CONE_MONOCHROMACY:
+                return precalcMonochromaticColorMap(ColorUtilities.blueConeMonochromacySim, amount);
+            case CUSTOM:
+                return precalcDichromaticColorMap(ColorUtilities.customSim, amount);
+            default:
+                throw new RuntimeException("ERROR: Unknown color deficiency");
         }
     }
 
@@ -62,7 +81,8 @@ public class ColorDeficiencySimulator extends ColorTransformGenerator {
             // simulate colorblindness
             int simRed = applyGammaCorrectionLUT[(int) (ColorUtilities
                     .clip(linRed * sim.v1 + linGreen * sim.v2 + linBlue
-                            * sim.v3) * (MAX_ENCODED_VALUE - 1))];
+                            * sim.v3)
+                    * (MAX_ENCODED_VALUE - 1))];
             int simGreen = simRed;
             int simBlue = simRed;
 

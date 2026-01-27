@@ -124,13 +124,15 @@ public class ColorBlindness implements PConstants {
         return daltonize(Deficiency.TRITANOPIA);
     }
 
-    public ColorTransformGenerator daltonizeAchromatopsia() {
-        return daltonize(Deficiency.ACHROMATOPSIA);
-    }
+    // Removing these because the math just doesn't make sense to daltonize
+    // monochromatic deficiencies.
+    // public ColorTransformGenerator daltonizeAchromatopsia() {
+    // return daltonize(Deficiency.ACHROMATOPSIA);
+    // }
 
-    public ColorTransformGenerator daltonizeBlueConeMonochromacy() {
-        return daltonize(Deficiency.BLUE_CONE_MONOCHROMACY);
-    }
+    // public ColorTransformGenerator daltonizeBlueConeMonochromacy() {
+    // return daltonize(Deficiency.BLUE_CONE_MONOCHROMACY);
+    // }
 
     public RegularRenderer renderRegular() {
         RegularRenderer generator = new RegularRenderer();

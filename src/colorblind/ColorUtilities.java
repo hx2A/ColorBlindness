@@ -54,9 +54,31 @@ public class ColorUtilities {
      * Daltonize Matrices
      * 
      * public so the user can change them if desired.
+     * 
+     * Evaluating color vision deficiency daltonization methods using a behavioral
+     * visual-search method
+     * Joschua Thomas Simon-Liedtke, Ivar Farup
+     * https://ivarfa.folk.ntnu.no/publications/journal/Simon_16_jvci.pdf
      */
-    public static Matrix shiftTowardsVisible = new Matrix(0.0f, 0.0f, 0.0f,
-            0.7f, 1.0f, 0.0f, 0.7f, 0.0f, 1.0f);
+    public static Matrix protanopiaShiftError = new Matrix(
+            0.0f, 0.0f, 0.0f,
+            0.7f, 1.0f, 0.0f,
+            0.7f, 0.0f, 1.0f);
+
+    public static Matrix deuteranopiaShiftError = new Matrix(
+            1.0f, 0.7f, 0.0f,
+            0.0f, 0.0f, 0.0f,
+            0.0f, 0.7f, 1.0f);
+
+    public static Matrix tritanopiaShiftError = new Matrix(
+            1.0f, 0.0f, 0.7f,
+            0.0f, 1.0f, 0.7f,
+            0.0f, 0.0f, 0.0f);
+
+    public static Matrix customShiftError = new Matrix(
+            1f, 0f, 0f,
+            0f, 1f, 0f,
+            0f, 0f, 1f);
 
     public static Matrix rgb2lms = new Matrix(0.31399022f, 0.63951294f,
             0.04649755f, 0.15537241f, 0.75789446f, 0.08670142f, 0.01775239f,
@@ -70,7 +92,7 @@ public class ColorUtilities {
      * Apply Gamma Correction
      * 
      * @param s
-     *            = value [0, 1]
+     *          = value [0, 1]
      * @return
      */
     public static float applyGammaCorrection(float s, float gamma) {
@@ -81,7 +103,7 @@ public class ColorUtilities {
      * Remove Gamma Correction
      * 
      * @param s
-     *            = value [0, 1]
+     *          = value [0, 1]
      * @return
      */
     public static float removeGammaCorrection(float s, float gamma) {
@@ -92,7 +114,7 @@ public class ColorUtilities {
      * Apply Standard Gamma Correction
      * 
      * @param s
-     *            = value [0, 1]
+     *          = value [0, 1]
      * @return
      */
     public static float applyGammaCorrectionStandardRGB(float s) {
@@ -107,7 +129,7 @@ public class ColorUtilities {
      * Remove Standard Gamma Correction
      * 
      * @param s
-     *            = value [0, 1]
+     *          = value [0, 1]
      * @return
      */
     public static float removeGammaCorrectionStandardRGB(float s) {
@@ -170,11 +192,11 @@ public class ColorUtilities {
      * This code attempts to pick multiple colors along those lines.
      * 
      * @param colorBlindness
-     *            color deficiency
+     *                       color deficiency
      * @param color
-     *            initial color
+     *                       initial color
      * @param x
-     *            float [0, 1]
+     *                       float [0, 1]
      * @return new color that is determined by x
      */
     public static int confusingDichromaticColor(Deficiency colorBlindness,
@@ -186,25 +208,25 @@ public class ColorUtilities {
 
         int index = 0;
         switch (colorBlindness) {
-        case PROTANOPIA:
-            index = 1;
-            break;
-        case DEUTERANOPIA:
-            index = 2;
-            break;
-        case TRITANOPIA:
-            index = 3;
-            break;
-        case ACHROMATOPSIA:
-        case BLUE_CONE_MONOCHROMACY:
-            throw new RuntimeException("Use confusingMonochromaticColor for "
-                    + colorBlindness.toString().toLowerCase()
-                    + " confusing colors.");
-        case CUSTOM:
-            throw new RuntimeException("Custom confusing colors not supported.");
-        default:
-            throw new RuntimeException(
-                    "Unknown Color Deficiency - please report");
+            case PROTANOPIA:
+                index = 1;
+                break;
+            case DEUTERANOPIA:
+                index = 2;
+                break;
+            case TRITANOPIA:
+                index = 3;
+                break;
+            case ACHROMATOPSIA:
+            case BLUE_CONE_MONOCHROMACY:
+                throw new RuntimeException("Use confusingMonochromaticColor for "
+                        + colorBlindness.toString().toLowerCase()
+                        + " confusing colors.");
+            case CUSTOM:
+                throw new RuntimeException("Custom confusing colors not supported.");
+            default:
+                throw new RuntimeException(
+                        "Unknown Color Deficiency - please report");
         }
 
         float lower = lmsFeasibleBisectionSearch(lms, index, -1);
@@ -239,11 +261,11 @@ public class ColorUtilities {
      * feasible vector in linear RGB space.
      * 
      * @param lms
-     *            Vector of color in LMS space
+     *                  Vector of color in LMS space
      * @param index
-     *            index into lms vector to change
+     *                  index into lms vector to change
      * @param direction
-     *            1 or -1 to search in bigger or smaller direction
+     *                  1 or -1 to search in bigger or smaller direction
      * @return feasible value on edge of feasibility
      */
     public static float lmsFeasibleBisectionSearch(Vector lms, int index,
@@ -300,35 +322,35 @@ public class ColorUtilities {
      * person. This code attempts to pick multiple colors on those planes.
      * 
      * @param color
-     *            initial color
+     *              initial color
      * @param x1
-     *            float [0, 1]
+     *              float [0, 1]
      * @param x2
-     *            float [0, 1]
+     *              float [0, 1]
      * @return new color that is determined by x1 and x2
      */
     public static int confusingMonochromaticColor(Deficiency colorBlindness,
             int color, float x1, float x2) {
         Vector sim;
         switch (colorBlindness) {
-        case ACHROMATOPSIA:
-            sim = achromatopsiaSim;
-            break;
-        case BLUE_CONE_MONOCHROMACY:
-            sim = blueConeMonochromacySim;
-            break;
-        case PROTANOPIA:
-        case DEUTERANOPIA:
-        case TRITANOPIA:
-            throw new RuntimeException("Use confusingDichromaticColor for "
-                    + colorBlindness.toString().toLowerCase()
-                    + " confusing colors.");
-        case CUSTOM:
-            throw new RuntimeException("Custom confusing colors not supported.");
+            case ACHROMATOPSIA:
+                sim = achromatopsiaSim;
+                break;
+            case BLUE_CONE_MONOCHROMACY:
+                sim = blueConeMonochromacySim;
+                break;
+            case PROTANOPIA:
+            case DEUTERANOPIA:
+            case TRITANOPIA:
+                throw new RuntimeException("Use confusingDichromaticColor for "
+                        + colorBlindness.toString().toLowerCase()
+                        + " confusing colors.");
+            case CUSTOM:
+                throw new RuntimeException("Custom confusing colors not supported.");
 
-        default:
-            throw new RuntimeException(
-                    "Unknown Color Deficiency - please report");
+            default:
+                throw new RuntimeException(
+                        "Unknown Color Deficiency - please report");
         }
 
         Vector rgb = convertPColor2LinearRGB(color);

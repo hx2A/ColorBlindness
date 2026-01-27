@@ -27,24 +27,56 @@ public class DaltonizeGenerator extends ColorTransformGenerator {
 
     public static DaltonizeGenerator createDaltonizer(Deficiency colorBlindness) {
         switch (colorBlindness) {
-        case PROTANOPIA:
-            return new DaltonizeGenerator(Deficiency.PROTANOPIA);
-        case DEUTERANOPIA:
-            return new DaltonizeGenerator(Deficiency.DEUTERANOPIA);
-        case TRITANOPIA:
-            return new DaltonizeGenerator(Deficiency.TRITANOPIA);
-        case ACHROMATOPSIA:
-            return new DaltonizeGenerator(Deficiency.ACHROMATOPSIA);
-        case BLUE_CONE_MONOCHROMACY:
-            return new DaltonizeGenerator(Deficiency.BLUE_CONE_MONOCHROMACY);
-        case CUSTOM:
-            return new DaltonizeGenerator(Deficiency.CUSTOM);
-        default:
-            throw new RuntimeException("Unknown color blindness deficiency");
+            case PROTANOPIA:
+                return new DaltonizeGenerator(Deficiency.PROTANOPIA);
+            case DEUTERANOPIA:
+                return new DaltonizeGenerator(Deficiency.DEUTERANOPIA);
+            case TRITANOPIA:
+                return new DaltonizeGenerator(Deficiency.TRITANOPIA);
+            case ACHROMATOPSIA:
+                return new DaltonizeGenerator(Deficiency.ACHROMATOPSIA);
+            case BLUE_CONE_MONOCHROMACY:
+                return new DaltonizeGenerator(Deficiency.BLUE_CONE_MONOCHROMACY);
+            case CUSTOM:
+                return new DaltonizeGenerator(Deficiency.CUSTOM);
+            default:
+                throw new RuntimeException("Unknown color blindness deficiency");
         }
     }
 
-    protected int[] precalcMonochromaticColorMap(Vector sim, float amount) {
+    protected int[] computeColorMapLookup(float amount) {
+        switch (deficiency) {
+            case PROTANOPIA:
+                return precalcDichromaticColorMap(ColorUtilities.protanopiaSim,
+                        ColorUtilities.protanopiaShiftError,
+                        amount);
+            case DEUTERANOPIA:
+                return precalcDichromaticColorMap(ColorUtilities.deuteranopiaSim,
+                        ColorUtilities.deuteranopiaShiftError,
+                        amount);
+            case TRITANOPIA:
+                return precalcDichromaticColorMap(ColorUtilities.tritanopiaSim,
+                        ColorUtilities.tritanopiaShiftError,
+                        amount);
+            // Removing these because the math just doesn't make sense to daltonize
+            // monochromatic deficiencies.
+            case ACHROMATOPSIA:
+                //     return precalcMonochromaticColorMap(ColorUtilities.achromatopsiaSim,
+                //             amount);
+                throw new RuntimeException("Daltonization not defined for monochromatic deficiencies");
+            case BLUE_CONE_MONOCHROMACY:
+                //     return precalcMonochromaticColorMap(ColorUtilities.blueConeMonochromacySim,
+                //             amount);
+                throw new RuntimeException("Daltonization not defined for monochromatic deficiencies");
+            case CUSTOM:
+                return precalcDichromaticColorMap(ColorUtilities.customSim,
+                        ColorUtilities.customShiftError, amount);
+            default:
+                throw new RuntimeException("ERROR: Unknown color deficiency");
+        }
+    }
+
+    protected int[] precalcMonochromaticColorMap(Vector sim, Matrix shiftErrorTowardsVisible, float amount) {
         int[] colorMap = new int[256 * 256 * 256];
         for (int color = 0; color < colorMap.length; ++color) {
             int startRed = (color & 0x00FF0000) >> 16;
@@ -65,8 +97,7 @@ public class DaltonizeGenerator extends ColorTransformGenerator {
             // calculate the color delta in color space, rotate it, and
             // add it back to the simulated color.
             Vector error = linRGB.sub(simRGB);
-            Vector correction = ColorUtilities.shiftTowardsVisible
-                    .rightMult(error);
+            Vector correction = shiftErrorTowardsVisible.rightMult(error);
             Vector daltonized = correction.add(linRGB);
 
             // Apply gamma correction using fast lookup table
@@ -91,7 +122,7 @@ public class DaltonizeGenerator extends ColorTransformGenerator {
         return colorMap;
     }
 
-    protected int[] precalcDichromaticColorMap(Matrix sim, float amount) {
+    protected int[] precalcDichromaticColorMap(Matrix sim, Matrix shiftErrorTowardsVisible, float amount) {
         int[] colorMap = new int[256 * 256 * 256];
         for (int color = 0; color < colorMap.length; ++color) {
             int startRed = (color & 0x00FF0000) >> 16;
@@ -112,8 +143,7 @@ public class DaltonizeGenerator extends ColorTransformGenerator {
             // calculate the color delta in color space, rotate it, and
             // add it back to the simulated color.
             Vector error = linRGB.sub(simRGB);
-            Vector correction = ColorUtilities.shiftTowardsVisible
-                    .rightMult(error);
+            Vector correction = shiftErrorTowardsVisible.rightMult(error);
             Vector daltonized = correction.add(linRGB);
 
             // Apply gamma correction using fast lookup table
