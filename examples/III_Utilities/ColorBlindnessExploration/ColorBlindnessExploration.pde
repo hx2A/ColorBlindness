@@ -80,6 +80,8 @@ public void setup() {
   preparePictureData();
   createControls();
   setCurrentGenerators();
+
+  print("Note: for achromatopsia and blue cone monochromacy, daltonization not defined.");
 }
 
 void draw() {
@@ -94,19 +96,23 @@ void draw() {
    the copy.  
    */
 
-  if (action == null || currentSimulator == null || currentDaltonizer == null) {
+  if (action == null) {
     // do nothing
-  } else if (action == Action.SIMULATE) {
+    return;
+  } else if (action == Action.SIMULATE && currentSimulator != null) {
     // simulate color blindness using current color blindness settings
     img = currentSimulator.transformPImage(img);
-  } else if (action == Action.DALTONIZE) {
+  } else if (action == Action.DALTONIZE && currentDaltonizer != null) {
     // perform daltonization using current color blindness settings
     img = currentDaltonizer.transformPImage(img);
-  } else if (action == Action.DALTONIZE_AND_SIMULATE) {
+  } else if (action == Action.DALTONIZE_AND_SIMULATE && currentSimulator != null && currentDaltonizer != null) {
     // perform daltonization and then simulation
     img = currentDaltonizer.transformPImage(img);
     img = currentSimulator.transformPImage(img);
+  } else {
+    return;
   }
+
   image(img, 150, 345);
 }
 
@@ -123,8 +129,16 @@ void setCurrentGenerators() {
      */
     currentSimulator = colorBlindness.simulate(deficiency).setDynamicAmount()
       .setAmount(amount / 100f);
-    currentDaltonizer = colorBlindness.daltonize(deficiency)
-      .setDynamicAmount().setAmount(amount / 100f);
+
+    if (deficiency == Deficiency.ACHROMATOPSIA ||
+      deficiency == Deficiency.BLUE_CONE_MONOCHROMACY) {
+      print("Note: for achromatopsia and blue cone monochromacy, daltonization not defined.");
+      currentDaltonizer = null;
+    } else {
+      currentDaltonizer = colorBlindness.daltonize(deficiency)
+        .setDynamicAmount().setAmount(amount / 100f);
+    }
+
   }
 }
 
