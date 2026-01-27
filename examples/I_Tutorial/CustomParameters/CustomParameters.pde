@@ -47,6 +47,7 @@ int squareSize;
 
 void setup() {
   size(500, 500, P2D);
+  pixelDensity(displayDensity());
 
   background(255);
 

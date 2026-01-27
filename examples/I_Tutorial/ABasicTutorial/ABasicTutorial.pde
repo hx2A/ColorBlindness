@@ -31,6 +31,8 @@ float rotZ = rot * 0.3f;
 
 void setup() {
   size(300, 300, P3D);
+  pixelDensity(displayDensity());
+
   // this is how the library 'attaches' to your sketch:
   ColorBlindness colorBlindness = new ColorBlindness(this);
   // change the below line of code to experiment

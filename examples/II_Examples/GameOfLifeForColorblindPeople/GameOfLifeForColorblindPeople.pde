@@ -27,6 +27,8 @@ int cellSize;
 
 void setup() {
   size(1000, 500);
+  pixelDensity(displayDensity());
+
   frameRate(30);
   colorMode(HSB, 360, 100, 100);
 

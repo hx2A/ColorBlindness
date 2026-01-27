@@ -42,6 +42,8 @@ color colorHover2;
 
 void setup() {
   size(300, 500);
+  pixelDensity(displayDensity());
+
   rectMode(CORNERS);
   textSize(30);
   colorMode(HSB, 360, 100, 100);

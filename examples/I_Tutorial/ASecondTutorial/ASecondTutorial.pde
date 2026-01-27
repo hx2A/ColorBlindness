@@ -43,6 +43,8 @@ int squareSize;
 
 void setup() {
   size(500, 500, P2D);
+  pixelDensity(displayDensity());
+
   background(255);
 
   squareSize = (int) random(20, 40);
@@ -77,6 +79,5 @@ Anthing that would work in the draw() method is acceptable for postDraw(). If yo
 don't have anything to put here, don't include it in your sketch.
  */
 void postDraw() {
-  copy(label, 0, 0, label.width, label.height, width - label.width, 
-    height - label.height, label.width, label.height);
+  image(label, width - label.width, height - label.height);
 }

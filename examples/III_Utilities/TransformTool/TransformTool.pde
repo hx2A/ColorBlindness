@@ -52,6 +52,8 @@ PImage scaledOutputImage;
 
 void setup() {
   size(720, 270);
+  pixelDensity(displayDensity());
+
   textSize(10);
 
   amount = 100;

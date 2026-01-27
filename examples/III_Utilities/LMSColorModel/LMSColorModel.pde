@@ -50,6 +50,8 @@ final int lmsBarHeight = 275;
 
 void setup() {
   size(700, 430);
+  pixelDensity(displayDensity());
+
   background(255);
   textSize(20);
 

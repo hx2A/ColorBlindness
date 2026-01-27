@@ -22,6 +22,7 @@ import colorblind.generators.Generator;
 
 void setup() {
   size(500, 500);
+  pixelDensity(displayDensity());
 
   ColorBlindness colorBlindness = new ColorBlindness(this);
 

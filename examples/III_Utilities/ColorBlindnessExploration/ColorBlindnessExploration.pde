@@ -61,6 +61,7 @@ PImage[] pimages;
 
 public void setup() {
   size(570, 665);
+  pixelDensity(displayDensity());
 
   cp5 = new ControlP5(this);
   colorBlindness = new ColorBlindness(this);

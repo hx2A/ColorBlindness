@@ -20,6 +20,8 @@ Deficiency deficiency;
 
 void setup() {
   size(600, 400);
+  pixelDensity(displayDensity());
+
   colorMode(HSB, 360, 100, 100);
 
   deficiency = Deficiency.PROTANOPIA;

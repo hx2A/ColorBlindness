@@ -22,6 +22,8 @@ int hue;
 
 void setup() {
   size(500, 500);
+  pixelDensity(displayDensity());
+
   colorMode(HSB, 360, 100, 100);
 
   deficiency = Deficiency.ACHROMATOPSIA;
