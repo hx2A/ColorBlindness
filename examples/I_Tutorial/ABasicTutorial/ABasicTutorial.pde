@@ -42,8 +42,6 @@ void setup() {
   //colorBlindness.daltonizeProtanopia();
   //colorBlindness.daltonizeDeuteranopia();
   //colorBlindness.daltonizeTritanopia();
-  //colorBlindness.daltonizeAchromatopsia();
-  //colorBlindness.daltonizeBlueConeMonochromacy();
 }
 
 void draw() {
