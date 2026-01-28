@@ -41,8 +41,14 @@ public class ColorUtilities {
     public static Matrix tritanopiaSim = new Matrix(1.0f, 0.0f, 0.0f, 0.0f,
             1.0f, 0.0f, -0.86744736f, 1.86727089f, 0.0f);
 
-    public static Vector achromatopsiaSim = new Vector(0.212656f, 0.715158f,
-            0.072186f);
+    /*
+     * normalized scotopic coefficients for achromatopsia simulation:
+     * Maksimainen, M., Kurkela, M., Bhusal, P., & Hyyppä, H. (2019).
+     * Calculation of Mesopic Luminance Using per Pixel S/P Ratios Measured with
+     * Digital Imaging. LEUKOS, 15(4), 309–317. 
+     * https://doi.org/10.1080/15502724.2018.1557526
+     */
+    public static Vector achromatopsiaSim = new Vector(0.007f, 0.519f, 0.474f);
 
     public static Vector blueConeMonochromacySim = new Vector(0.01775f,
             0.10945f, 0.87262f);
