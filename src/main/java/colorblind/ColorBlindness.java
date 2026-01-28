@@ -58,13 +58,6 @@ public class ColorBlindness implements PConstants {
         reportStats = false;
 
         renderRegular();
-
-        welcome();
-    }
-
-    private void welcome() {
-        System.out
-                .println("##library.name## ##library.prettyVersion## by ##author##");
     }
 
     public static String version() {
