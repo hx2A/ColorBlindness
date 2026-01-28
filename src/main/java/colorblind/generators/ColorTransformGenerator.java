@@ -47,6 +47,15 @@ public abstract class ColorTransformGenerator extends Generator {
     }
 
     /**
+     * Helper function for the precomputed color map lookup table.
+     */
+    public int[] getColorMap() {
+        verifyLookupTables();
+
+        return colorMap;
+    }
+
+    /**
      * This should only be called once, and lazily, when the table is first
      * used.
      * 
